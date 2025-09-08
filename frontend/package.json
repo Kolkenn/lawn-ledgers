@@ -2,21 +2,23 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "postcss.config.js",
   "scripts": {
     "dev": "vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build"
   },
   "keywords": [],
   "author": "Leonel Ponce",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^4.0.1",
+    "autoprefixer": "^10.4.21",
     "vite": "^7.1.5"
   }
 }
