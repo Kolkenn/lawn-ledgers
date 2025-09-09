@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { auth, db } from './firebase';
@@ -8,6 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 // Import the new page components
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import CreateCompanyPage from './pages/CreateCompanyPage';
 
 // A new component for our main dashboard page
 const Dashboard = ({ user, companyProfile, handleLogout }) => (
@@ -28,38 +28,35 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [companyProfile, setCompanyProfile] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        const docRef = doc(db,"companies",currentUser.uid)
+        const docSnap = await getDoc(docRef);
+
         setUser(currentUser);
-        await fetchCompanyProfile(currentUser.uid);
-        navigate('/'); // Redirect to dashboard after login/signup
-      } else {
+        if (docSnap.exists()) {
+          setCompanyProfile(docSnap.data())
+        } else {
+          setCompanyProfile(null);
+        }
+      }
+      else {
         setUser(null);
         setCompanyProfile(null);
       }
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [navigate]);
-
-  const fetchCompanyProfile = async (uid) => {
-    const docRef = doc(db, "companies", uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      setCompanyProfile(docSnap.data());
-    }
-  };
+  }, []);
 
   const handleLogout = async () => {
     await signOut(auth);
-    navigate('/login'); // Redirect to login page after logout
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-slate-100"></div>; // Or a proper loading spinner
+    return <div className="min-h-screen bg-slate-100"></div>;
   }
 
   return (
@@ -67,14 +64,21 @@ function App() {
       <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
       <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
       <Route 
+        path="/create-company" 
+        element={user && !companyProfile ? <CreateCompanyPage /> : <Navigate to="/" />} />
+      <Route 
         path="/" 
         element={
           user ? (
-            <Dashboard user={user} companyProfile={companyProfile} handleLogout={handleLogout} />
+            companyProfile ? (
+              <Dashboard user={user} companyProfile={companyProfile} handleLogout={handleLogout} />
+            ) : (
+              <Navigate to="/create-company" />
+            )
           ) : (
             <Navigate to="/login" />
           )
-        } 
+        }
       />
     </Routes>
   );
