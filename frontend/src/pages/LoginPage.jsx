@@ -1,7 +1,8 @@
 // src/pages/LoginPage.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth } from '../firebase/config';
+import { handleGoogleSignIn } from '../firebase/authService';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import FormField from '../components/FormField';
@@ -12,19 +13,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
-
-  const handleGoogleSignIn = async () => {
-    setError('');
-    const provider = new GoogleAuthProvider();
-    try {
-      // This will open a popup for the user to sign in
-      await signInWithPopup(auth, provider);
-      // After this, the onAuthStateChanged listener in App.jsx will take over
-    } catch (err) {
-      setError(err.message);
-      console.error("Error during Google sign-in:", err);
-    }
-  };
 
   useEffect(() => {
   if (email === '') {

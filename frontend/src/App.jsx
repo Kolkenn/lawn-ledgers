@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { auth, db } from './firebase';
+import { auth, db } from './firebase/config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from 'firebase/firestore';
 
 // Import the new page components
 import LoginPage from './pages/LoginPage';

@@ -1,6 +1,7 @@
 import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
-import { auth, db } from '../firebase';
+import { auth, db } from '../firebase/config';
+import { handleGoogleSignIn } from '../firebase/authService';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -81,19 +82,6 @@ const RegisterPage = () => {
 
   const setPasswordValidation = (criteria) => {
     setValidation(v => ({ ...v, password: criteria }));
-  };
-
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      // This single function handles both registration and login
-      await signInWithPopup(auth, provider);
-      // The onAuthStateChanged listener in App.jsx will handle the rest,
-      // including checking for a company profile and redirecting.
-    } catch (err) {
-      // We can display this error if needed, but for now, we'll log it.
-      console.error("Error during Google sign-in:", err);
-    }
   };
 
   const handleSignUp = async (e) => {

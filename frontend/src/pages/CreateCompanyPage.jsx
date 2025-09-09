@@ -1,6 +1,6 @@
 // src/pages/CreateCompanyPage.jsx
 import { useState } from 'react';
-import { auth, db } from '../firebase';
+import { auth, db } from '../firebase/config';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
