@@ -1,9 +1,10 @@
-// src/pages/RegisterPage.jsx
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,29 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
+  });
+
+  useEffect(() => {
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[^A-Za-z0-9]/.test(password);
+    const hasLength = password.length >= 8;
+
+    setPasswordValidation({
+      length: hasLength,
+      uppercase: hasUppercase,
+      lowercase: hasLowercase,
+      number: hasNumber,
+      special: hasSpecial,
+    });
+  }, [password]);
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,16 +45,18 @@ const RegisterPage = () => {
     setError('');
 
     // --- Start Validation ---
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+    const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+    if (!isPasswordValid) {
+      setError("Please ensure your password meets all requirements.");
       return;
     }
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     if (!companyName) {
@@ -82,7 +108,7 @@ const RegisterPage = () => {
               id="password" type="password" placeholder="••••••••" value={password}
               onChange={(e) => setPassword(e.target.value)} required
             />
-            <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters long.</p>
+            <PasswordStrengthIndicator validation={passwordValidation} />
           </div>
           <div className="mb-6">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
