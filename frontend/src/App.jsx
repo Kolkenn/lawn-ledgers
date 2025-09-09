@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { auth, db } from './firebase/config';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { handleLogout } from './firebase/authService'; 
 import { doc, getDoc } from 'firebase/firestore';
 
 // Import the new page components
@@ -10,7 +11,7 @@ import RegisterPage from './pages/RegisterPage';
 import CreateCompanyPage from './pages/CreateCompanyPage';
 
 // A new component for our main dashboard page
-const Dashboard = ({ user, companyProfile, handleLogout }) => (
+const Dashboard = ({ user, companyProfile, onLogout }) => (
   <div className="p-8">
     <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold">
@@ -51,10 +52,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-  };
-
   if (loading) {
     return <div className="min-h-screen bg-slate-100"></div>;
   }
@@ -71,7 +68,7 @@ function App() {
         element={
           user ? (
             companyProfile ? (
-              <Dashboard user={user} companyProfile={companyProfile} handleLogout={handleLogout} />
+              <Dashboard user={user} companyProfile={companyProfile} onLogout={handleLogout} />
             ) : (
               <Navigate to="/create-company" />
             )

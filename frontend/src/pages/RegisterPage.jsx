@@ -1,9 +1,7 @@
 import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
-import { handleGoogleSignIn } from '../firebase/authService';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { handleGoogleSignIn, handleEmailSignUp } from '../firebase/authService';
 
 import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 import FormField from '../components/FormField';
@@ -102,15 +100,10 @@ const RegisterPage = () => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      await setDoc(doc(db, "companies", user.uid), {
-        ownerUid: user.uid,
-        ownerEmail: user.email,
-        companyName: companyName.trim(),
-        createdAt: serverTimestamp(),
-      });
+      await handleEmailSignUp(email,password,companyName);
+      // The onAuthStateChanged listener in App.jsx will handle the redirect
     } catch (err) {
+      // The service re-throws the error, so we can catch it here to display to the user
       alert(err.message);
       console.error("Error during sign up:", err);
     }
@@ -123,7 +116,8 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-slate-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Your Account</h1>
-          <div className="my-4">
+        
+        <div className="my-4">
           <p className="text-center text-sm text-gray-500 mb-2">Sign up with</p>
           <div className="flex justify-center space-x-4">
             {/* Google Button */}
@@ -144,17 +138,20 @@ const RegisterPage = () => {
           <span className="flex-shrink mx-4 text-gray-400">or continue with email</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
+
         <form onSubmit={handleSignUp} noValidate>
           <FormField 
             id="companyName" label="Company Name" type="text" placeholder="e.g., GreenScapes Landscaping"
             value={companyName} onChange={(e) => setCompanyName(e.target.value)}
             error={!validation.companyName.isValid ? validation.companyName.message : ''}
           />
+
           <FormField 
             id="email" label="Email" type="email" placeholder="you@example.com"
             value={email} onChange={(e) => setEmail(e.target.value)}
             error={!validation.email.isValid ? validation.email.message : ''}
           />
+
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="password">Password</label>
             <input
@@ -164,6 +161,7 @@ const RegisterPage = () => {
             />
             <PasswordStrengthIndicator validation={validation.password} />
           </div>
+
           <FormField 
             id="confirmPassword" label="Confirm Password" type="password" placeholder="••••••••"
             value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
@@ -173,6 +171,7 @@ const RegisterPage = () => {
           <button className="cursor-pointer w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors" type="submit">
             Sign Up
           </button>
+          
         </form>
         <div className="text-center mt-4">
           <Link to="/login" className="text-blue-600 hover:underline">

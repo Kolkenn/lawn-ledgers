@@ -1,9 +1,7 @@
 // src/pages/LoginPage.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from '../firebase/config';
-import { handleGoogleSignIn } from '../firebase/authService';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { handleGoogleSignIn, handleEmailLogin } from '../firebase/authService';
 
 import FormField from '../components/FormField';
 import GoogleIcon from '../components/icons/GoogleIcon';
@@ -29,13 +27,16 @@ const LoginPage = () => {
 
     if (!isEmailValid) {
       setError("Please enter a valid email address.")
+      return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+            // A single, clean call to our abstracted service function
+      await handleEmailLogin(email, password);
+      // The onAuthStateChanged listener in App.jsx will handle the redirect
     } catch (err) {
       setError("Invalid email or password. Please try again.");
-      console.error("Error during login:", err);
+      console.error("Caught login error in component:", err);
     }
   };
 
