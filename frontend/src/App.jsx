@@ -1,57 +1,77 @@
-// A simple SVG icon for the phone
-const PhoneIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-  </svg>
-);
+import { useState, useEffect } from 'react';
+import { auth } from './firebase'; // Import the auth instance from our config file
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { Auth } from './Auth'; // Import our new Auth component
 
-// This is our main App component
 function App() {
-  return (
-    // Main container to center the content on the page
-    <div className="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+  // This state will hold the current user object if they are logged in
+  const [user, setUser] = useState(null);
+  // This state will help us avoid a flicker effect while Firebase checks the auth state
+  const [loading, setLoading] = useState(true);
 
-      {/* The Client Card */}
-      <div className="max-w-md md:max-w-2xl w-full bg-white rounded-xl shadow-lg p-8">
-        
-        {/* Header Section */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">John Doe</h1>
-            <p className="text-sm font-medium text-gray-500">123 Maple Street, Anytown</p>
-          </div>
-          <div className="text-xs font-semibold text-white bg-orange-500 rounded-full px-3 py-1">
-            Pending
-          </div>
-        </div>
+  // This is the core of our authentication system.
+  // useEffect with an empty dependency array runs once when the component mounts.
+  useEffect(() => {
+    // onAuthStateChanged is a listener from Firebase. It fires whenever the
+    // user's login state changes (login, logout, or on initial page load).
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // If the user is logged in, currentUser will be their user object. If not, it will be null.
+      setLoading(false); // We're done checking, so we can stop showing a loading state.
+    });
 
-        {/* Divider */}
-        <div className="my-6 border-t border-gray-200"></div>
+    // This is a cleanup function. When the App component unmounts (e.g., user navigates away),
+    // we unsubscribe from the listener to prevent memory leaks.
+    return () => {
+      unsubscribe();
+    };
+  }, []); // The empty array [] means this effect runs only once.
 
-        {/* Contact Info Section */}
-        <div className="flex items-center space-x-3 text-gray-600">
-          <PhoneIcon />
-          <span>(555) 123-4567</span>
-        </div>
+  // A simple function to handle user logout
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Error logging out:", err);
+    }
+  };
 
-        {/* Notes Section */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold text-gray-700">Service Notes</h3>
-          <p className="mt-2 text-gray-600 bg-gray-50 p-3 rounded-md border border-gray-200">
-            Gate code is #1234. Please be mindful of the dog, Sparky. He's friendly but likes to escape. Mow front and back, trim hedges on the west side of the property.
-          </p>
-        </div>
-
-        {/* Action Button */}
-        <div className="mt-8">
-          <button className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors cursor-pointer">
-            View Job Details
-          </button>
-        </div>
-
+  // While Firebase is checking the auth state, we can show a loading message.
+  // This prevents the user from briefly seeing the login page even if they are already logged in.
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <p className="text-xl font-medium text-gray-600">Loading...</p>
       </div>
+    );
+  }
+
+  // This is the main render logic.
+  // If a user object exists, it means they are logged in.
+  // If not, we show the Auth component.
+  return (
+    <div>
+      {user ? (
+        // What a logged-in user will see
+        <div className="p-8">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Welcome, {user.email}</h1>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+            >
+              Log Out
+            </button>
+          </div>
+          <p className="mt-4">You are now logged in. The main application dashboard will be built here.</p>
+          <p className="text-sm text-gray-500 mt-2">Your User ID is: {user.uid}</p>
+        </div>
+      ) : (
+        // What a logged-out user will see
+        <Auth />
+      )}
     </div>
   );
 }
 
 export default App;
+
