@@ -1,32 +1,53 @@
+// External Imports
 import { useState, useEffect } from 'react';
-import { auth } from './firebase'; // Import the auth instance from our config file
+import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { Auth } from './Auth'; // Import our new Auth component
+import { doc, getDoc } from "firebase/firestore";
+
+// Internal Imports ( Custom Tools )
+import { Auth } from './Auth';
 
 function App() {
-  // This state will hold the current user object if they are logged in
+  // State Variables
   const [user, setUser] = useState(null);
-  // This state will help us avoid a flicker effect while Firebase checks the auth state
   const [loading, setLoading] = useState(true);
+  const [companyProfile, setCompanyProfile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // This is the core of our authentication system.
-  // useEffect with an empty dependency array runs once when the component mounts.
   useEffect(() => {
-    // onAuthStateChanged is a listener from Firebase. It fires whenever the
-    // user's login state changes (login, logout, or on initial page load).
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // If the user is logged in, currentUser will be their user object. If not, it will be null.
-      setLoading(false); // We're done checking, so we can stop showing a loading state.
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
+      if (currentUser){
+        setUser(currentUser);
+        await fetchCompanyProfile(currentUser.uid);
+      } else {
+        setUser(null);
+        setCompanyProfile(null);
+      }
+      setLoading(false);
     });
 
-    // This is a cleanup function. When the App component unmounts (e.g., user navigates away),
-    // we unsubscribe from the listener to prevent memory leaks.
-    return () => {
-      unsubscribe();
-    };
-  }, []); // The empty array [] means this effect runs only once.
+    return () => unsubscribe();
+  }, []); 
 
-  // A simple function to handle user logout
+  const fetchCompanyProfile = async (uid) => {
+    setLoadingProfile(true);
+    try {
+      const docRef = doc(db, "companies", uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setCompanyProfile(docSnap.data());
+      } else {
+        console.log("No such company document!");
+      }
+    } catch (error) {
+      console.error("Error fetching company profile:", error);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -35,8 +56,6 @@ function App() {
     }
   };
 
-  // While Firebase is checking the auth state, we can show a loading message.
-  // This prevents the user from briefly seeing the login page even if they are already logged in.
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-100 flex items-center justify-center">
@@ -51,10 +70,15 @@ function App() {
   return (
     <div>
       {user ? (
-        // What a logged-in user will see
         <div className="p-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Welcome, {user.email}</h1>
+            {loadingProfile ? (
+              <h1 className="text-3xl font-bold">Loading...</h1>
+            ) : (
+              <h1 className="text-3xl font-bold">
+                Welcome to {companyProfile?.companyName || 'Your Dashboard'}
+              </h1>
+            )}
             <button
               onClick={handleLogout}
               className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
@@ -62,7 +86,7 @@ function App() {
               Log Out
             </button>
           </div>
-          <p className="mt-4">You are now logged in. The main application dashboard will be built here.</p>
+          <p className="mt-4">You are now logged in as {user.email}</p>
           <p className="text-sm text-gray-500 mt-2">Your User ID is: {user.uid}</p>
         </div>
       ) : (
