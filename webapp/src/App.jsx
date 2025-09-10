@@ -18,6 +18,7 @@ import useIdleTimer from './hooks/useIdleTimer'
 function App() {
   const [user, setUser] = useState(null);
   const [companyProfile, setCompanyProfile] = useState(null);
+  const [memberProfile, setMemberProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useIdleTimer(handleLogout);
@@ -25,18 +26,24 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const docRef = doc(db, "companies", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-
         setUser(currentUser);
-        if (docSnap.exists()) {
-          setCompanyProfile(docSnap.data());
-        } else {
-          setCompanyProfile(null);
-        }
+
+        // Fetch both company and member profiles in parallel for speed
+        const companyDocRef = doc(db, "companies", currentUser.uid);
+        const memberDocRef = doc(db, "companies", currentUser.uid, "members", currentUser.uid);
+
+        const [companySnap, memberSnap] = await Promise.all([
+          getDoc(companyDocRef),
+          getDoc(memberDocRef)
+        ]);
+
+        setCompanyProfile(companySnap.exists() ? companySnap.data() : null);
+        setMemberProfile(memberSnap.exists() ? memberSnap.data() : null);
+
       } else {
         setUser(null);
         setCompanyProfile(null);
+        setMemberProfile(null);
       }
       setLoading(false);
     });
@@ -93,7 +100,8 @@ function App() {
                     element={
                         <SettingsPage 
                             user={user} 
-                            companyProfile={companyProfile} 
+                            companyProfile={companyProfile}
+                            memberProfile={memberProfile}
                             onProfileUpdate={handleProfileUpdate} 
                         />
                     } 

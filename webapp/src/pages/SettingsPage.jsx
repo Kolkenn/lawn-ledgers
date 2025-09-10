@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import CompanyProfileSettings from '../components/settings/CompanyProfileSettings';
 //import IntegrationsSettings from '../components/settings/IntegrationsSettings';
 
-const SettingsPage = ({ user, companyProfile, onProfileUpdate }) => {
+const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) => {
   const { t } = useTranslation();
   
   return (
@@ -10,6 +10,7 @@ const SettingsPage = ({ user, companyProfile, onProfileUpdate }) => {
       <div className="space-y-10">
         <CompanyProfileSettings 
           companyProfile={companyProfile}
+          memberProfile={memberProfile}
           onProfileUpdate={onProfileUpdate}
         />
 
