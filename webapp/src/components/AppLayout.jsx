@@ -32,9 +32,7 @@ const AppLayout = ({ user, companyProfile }) => {
         }`
       }
     >
-      {icon}
-      {/* --- THE FIX for shrinking icons --- */}
-      {/* We only render the span if the sidebar is not collapsed */}
+      <div className="flex-shrink-0">{icon}</div>
       {!isCollapsed && (
         <span className="ml-3 whitespace-nowrap overflow-hidden">
           {children}
