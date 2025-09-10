@@ -55,6 +55,8 @@
     "changeLogo": "Change Logo",
     "saveChanges": "Save Changes",
     "integrations": "Integrations",
-    "profileUpdated": "Profile updated successfully!"
+    "profileUpdated": "Profile updated successfully!",
+    "uploadingLogo": "Uploading logo...",
+    "logoUploaded": "Logo ready to be saved."
   }
 }
