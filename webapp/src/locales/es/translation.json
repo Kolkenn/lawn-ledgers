@@ -42,5 +42,19 @@
   "jobStatuses": {
     "scheduled": "Programado",
     "inProgress": "En Progreso"
+  },
+  "settings": {
+    "companyInfo": "Información de la Compañía",
+    "companyNameLabel": "Nombre de la Compañía",
+    "addressLabel": "Dirección",
+    "cityLabel": "Ciudad",
+    "stateLabel": "Estado / Provincia",
+    "zipLabel": "Código Postal",
+    "logoLabel": "Logo de la Compañía",
+    "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
+    "changeLogo": "Cambiar Logo",
+    "saveChanges": "Guardar Cambios",
+    "integrations": "Integraciones",
+    "profileUpdated": "¡Perfil actualizado con éxito!"
   }
 }

@@ -6,7 +6,9 @@ import {
   ChevronLeft,
   ChevronRight,
   CalendarClock,
-  FileText
+  FileText,
+  UploadCloud,
+  Save
 } from 'lucide-react';
 
 const GoogleIcon = () => (
@@ -19,7 +21,7 @@ const GoogleIcon = () => (
 );
 
 export {
-  Languages as LanguageIcon, // Rename for consistency
+  Languages as LanguageIcon,
   LogOut as LogoutIcon,
   Settings as SettingsIcon,
   LayoutDashboard as DashboardIcon,
@@ -27,5 +29,7 @@ export {
   ChevronRight as ExpandIcon,
   CalendarClock as JobIcon,
   FileText as InvoiceIcon,
+  UploadCloud as UploadIcon,
+  Save as SaveIcon,
   GoogleIcon,
 };

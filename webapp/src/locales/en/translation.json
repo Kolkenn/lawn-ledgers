@@ -42,5 +42,19 @@
   "jobStatuses": {
     "scheduled": "Scheduled",
     "inProgress": "In Progress"
+  },
+  "settings": {
+    "companyInfo": "Company Information",
+    "companyNameLabel": "Company Name",
+    "addressLabel": "Address",
+    "cityLabel": "City",
+    "stateLabel": "State / Province",
+    "zipLabel": "Zip / Postal Code",
+    "logoLabel": "Company Logo",
+    "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",
+    "changeLogo": "Change Logo",
+    "saveChanges": "Save Changes",
+    "integrations": "Integrations",
+    "profileUpdated": "Profile updated successfully!"
   }
 }
