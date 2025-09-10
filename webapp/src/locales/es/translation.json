@@ -26,5 +26,12 @@
     "lowercase": "Contiene una letra minúscula",
     "number": "Contiene un número",
     "special": "Contiene un carácter especial"
-  }
+  },
+  "pageTitles": {
+    "dashboard": "Panel de Control",
+    "settings": "Configuración"
+  },
+  "logOut": "Cerrar Sesión",
+  "expandSidebar": "Expandir barra lateral",
+  "collapseSidebar": "Contraer barra lateral"
 }

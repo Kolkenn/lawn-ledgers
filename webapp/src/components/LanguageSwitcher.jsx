@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageIcon from './icons/LanguageIcon';
+import {LanguageIcon} from './icons/Icons';
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();

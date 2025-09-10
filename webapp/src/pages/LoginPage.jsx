@@ -4,7 +4,7 @@ import { handleGoogleSignIn, handleEmailLogin } from '../firebase/authService';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '../components/FormField';
-import GoogleIcon from '../components/icons/GoogleIcon';
+import { GoogleIcon } from '../components/icons/Icons';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const LoginPage = () => {

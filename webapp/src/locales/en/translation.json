@@ -26,5 +26,12 @@
     "lowercase": "Contains a lowercase letter",
     "number": "Contains a number",
     "special": "Contains a special character"
-  }
+  },
+  "pageTitles": {
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "logOut": "Log Out",
+  "expandSidebar": "Expand sidebar",
+  "collapseSidebar": "Collapse sidebar"
 }

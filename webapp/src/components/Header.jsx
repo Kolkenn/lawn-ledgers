@@ -1,17 +1,33 @@
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
-import LogoutIcon from './icons/LogoutIcon';
+import { LogoutIcon } from './icons/Icons';
 import { handleLogout } from '../firebase/authService';
 
 const Header = ({ user, companyProfile }) => {
   const { t } = useTranslation();
+  const location = useLocation();
+
+  // A helper function to get the page title based on the current path
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/':
+        return t('pageTitles.dashboard');
+      case '/settings':
+        return t('pageTitles.settings');
+      default:
+        return ''; // Or a default title
+    }
+  };
+
+  const pageTitle = getPageTitle();
 
   return (
     <header className="bg-white border-b border-gray-200 p-4">
       <div className="flex justify-between items-center">
-        {/* We can make this title dynamic in the future */}
         <h1 className="text-xl font-semibold text-gray-800">
-          {companyProfile?.companyName || t('yourDashboard')}
+          {companyProfile?.companyName}
+          {pageTitle && <span className="text-gray-400 font-normal"> - {pageTitle}</span>}
         </h1>
         <div className="flex items-center space-x-2">
           <LanguageSwitcher />
