@@ -138,7 +138,7 @@ const RegisterPage = () => {
                 id="password" type="password" placeholder="••••••••" value={password}
                 onChange={(e) => setPassword(e.target.value)} required
               />
-              <PasswordStrengthIndicator validation={validation.password} />
+              <PasswordStrengthIndicator validation={validation.password} password={password} />
             </div>
 
             <FormField 
