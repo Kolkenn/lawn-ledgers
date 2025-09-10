@@ -1,6 +1,5 @@
 import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
-import { auth, db } from '../firebase/config';
 import { handleGoogleSignIn, handleEmailSignUp } from '../firebase/authService';
 import { useTranslation } from 'react-i18next';
 
@@ -13,12 +12,10 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [companyName, setCompanyName] = useState('');
   const { t } = useTranslation();
   
   const [validation, setValidation] = useState({
     email: { isValid: true, message: '' },
-    companyName: { isValid: true, message: '' },
     password: {
       length: false, 
       uppercase: false, 
@@ -44,20 +41,7 @@ const RegisterPage = () => {
     }}));
   }, [email]);
 
-  // 2. Validate Company Name as the user types
-  useEffect(() => {
-    if (companyName === '') {
-      setValidation(v => ({ ...v, companyName: { isValid: true, message: '' } }));
-      return;
-    }
-    const isValid = companyName.length > 0;
-    setValidation(v => ({ ...v, companyName: { 
-      isValid, 
-      message: isValid ? '' : 'Company name is required.' 
-    }}));
-  }, [companyName]);
-
-  // 3. Validate Password strength as the user types
+  // 2. Validate Password strength as the user types
   useEffect(() => {
     setPasswordValidation({
       length: password.length >= 8,
@@ -68,11 +52,11 @@ const RegisterPage = () => {
     });
   }, [password]);
 
-  // 4. Validate Confirm Password field whenever password or confirmPassword changes
+  // 3. Validate Confirm Password field whenever password or confirmPassword changes
   useEffect(() => {
-    if (confirmPassword === '' && password === '') {
-      setValidation(v => ({ ...v, confirmPassword: { isValid: true, message: '' }}));
-      return;
+    if (confirmPassword === '') {
+        setValidation(v => ({ ...v, confirmPassword: { isValid: true, message: '' }}));
+        return;
     }
     const isValid = password === confirmPassword;
     setValidation(v => ({ ...v, confirmPassword: { 
@@ -89,12 +73,6 @@ const RegisterPage = () => {
     e.preventDefault();
 
     // --- Start Validation ---
-
-    // The .trim() function removes any whitespace from the beginning or end.
-    if (companyName.trim() === '') {
-        setValidation(v => ({ ...v, companyName: { isValid: false, message: 'Company name is required.' } }));
-        return;
-    }
     const isPasswordStrong = Object.values(validation.password).every(Boolean);
     if (!validation.email.isValid || !isPasswordStrong || !validation.confirmPassword.isValid) {
       // This provides a general error if the user tries to submit an invalid form
@@ -103,7 +81,7 @@ const RegisterPage = () => {
     }
 
     try {
-      await handleEmailSignUp(email,password,companyName);
+      await handleEmailSignUp(email,password);
       // The onAuthStateChanged listener in App.jsx will handle the redirect
     } catch (err) {
       // The service re-throws the error, so we can catch it here to display to the user
@@ -147,12 +125,6 @@ const RegisterPage = () => {
           </div>
 
           <form onSubmit={handleSignUp} noValidate>
-            <FormField 
-              id="companyName" label={t('companyNameLabel')} type="text" placeholder="e.g., GreenScapes Landscaping"
-              value={companyName} onChange={(e) => setCompanyName(e.target.value)}
-              error={!validation.companyName.isValid ? validation.companyName.message : ''}
-            />
-
             <FormField 
               id="email" label={t('emailLabel')} type="email" placeholder="you@example.com"
               value={email} onChange={(e) => setEmail(e.target.value)}
