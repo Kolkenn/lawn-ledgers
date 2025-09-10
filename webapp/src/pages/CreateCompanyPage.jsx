@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { auth, db } from '../firebase/config';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -18,15 +18,14 @@ const FormField = ({ id, label, type, placeholder, value, onChange, error }) => 
   </div>
 );
 
-
-const CreateCompanyPage = () => {
+const CreateCompanyPage = ({ onProfileCreated }) => {
+  const { t } = useTranslation();
   const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
     setError('');
     if (!companyName.trim()) {
       setError('Please enter a company name.');
@@ -36,14 +35,32 @@ const CreateCompanyPage = () => {
     const user = auth.currentUser;
     if (user) {
       try {
-        await setDoc(doc(db, "companies", user.uid), {
+        // Use a batch write to ensure both documents are created atomically
+        const batch = writeBatch(db);
+
+        // 1. Define the reference for the main company document
+        const companyDocRef = doc(db, "companies", user.uid);
+        batch.set(companyDocRef, {
           ownerUid: user.uid,
-          ownerEmail: user.email,
           companyName: companyName.trim(),
           createdAt: serverTimestamp(),
         });
-        // After successfully creating the profile, navigate to the dashboard.
-        // The onAuthStateChanged listener in App.jsx will handle fetching the new profile.
+
+        // 2. Define the reference for the owner's document in the members sub-collection
+        const memberDocRef = doc(db, "companies", user.uid, "members", user.uid);
+        batch.set(memberDocRef, {
+          email: user.email,
+          role: "owner", // <-- Assign the 'owner' role
+          joinedAt: serverTimestamp(),
+        });
+
+        // 3. Commit the batch
+        await batch.commit();
+
+        // Before navigating, we call the function passed from App.jsx.
+        // This tells the parent component to update its state immediately.
+        await onProfileCreated();
+
         navigate('/');
       } catch (err) {
         setError(err.message);
@@ -55,28 +72,29 @@ const CreateCompanyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-emerald-900 p-4">
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center">
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">{t('oneLastStep')}</h1>
-          <p className="text-center text-gray-600 mb-6">
-            {t('finishSetup')}
-          </p>
-          <form onSubmit={handleSubmit} noValidate>
-            <FormField 
-              id="companyName" label={t('companyNameLabel')} type="text"
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">{t('oneLastStep')}</h1>
+        <p className="text-center text-gray-600 mb-6">{t('finishSetup')}</p>
+        <form onSubmit={handleSubmit} noValidate>
+          {/* This FormField component needs to be defined or imported */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="companyName">{t('companyNameLabel')}</label>
+            <input
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${error ? 'border-red-500' : 'border-gray-300'}`}
+              id="companyName" type="text"
               placeholder="e.g., GreenScapes Landscaping"
-              value={companyName} onChange={(e) => setCompanyName(e.target.value)}
-              error={error}
+              value={companyName} onChange={(e) => setCompanyName(e.target.value)} required
             />
-            <button className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors mt-2" type="submit">
-              {t('continue')}
-            </button>
-          </form>
-        </div>
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+          </div>
+          <button className="cursor-pointer w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors mt-2" type="submit">
+            {t('continue')}
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import { auth, db } from './firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 import { handleLogout } from './firebase/authService';
 import { doc, getDoc } from "firebase/firestore";
-import { useTranslation } from 'react-i18next';
 
 // Layout and Page Components
 import AppLayout from './components/AppLayout';
@@ -48,6 +47,21 @@ function App() {
     setCompanyProfile(updatedProfile);
   };
 
+  const fetchCompanyProfile = async (uid) => {
+  const docRef = doc(db, "companies", uid);
+  const docSnap = await getDoc(docRef);
+  return docSnap.exists() ? docSnap.data() : null;
+  };
+
+  const handleProfileCreated = async () => {
+    if (auth.currentUser) {
+      const profile = await fetchCompanyProfile(auth.currentUser.uid);
+      if (profile) {
+        setCompanyProfile(profile);
+      }
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen bg-slate-100"></div>;
   }
@@ -68,7 +82,8 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
-            <Route path="/create-company" element={user && !companyProfile ? <CreateCompanyPage /> : <Navigate to="/" />} />
+            <Route path="/create-company" element={user && !companyProfile ? <CreateCompanyPage onProfileCreated={handleProfileCreated} /> : <Navigate to="/" />}  
+            />
 
             {/* Protected Routes inside the AppLayout */}
             <Route element={<PrivateRoutes />}>

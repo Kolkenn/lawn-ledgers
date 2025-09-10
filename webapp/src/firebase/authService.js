@@ -29,23 +29,13 @@ export const handleGoogleSignIn = async () => {
 };
 
 /**
- * Signs a new user up with email and password, and creates their company profile.
- * @param {string} email - The user's email.
- * @param {string} password - The user's password.
- * @param {string} companyName - The user's company name.
+ * Signs a new user up with email and password.
+ * The onAuthStateChanged listener will handle redirecting to the company creation page.
  */
-export const handleEmailSignUp = async (email, password, companyName) => {
+export const handleEmailSignUp = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // Create the associated company profile document in Firestore
-    await setDoc(doc(db, "companies", user.uid), {
-      ownerUid: user.uid,
-      ownerEmail: user.email,
-      companyName: companyName.trim(),
-      createdAt: serverTimestamp(),
-    });
+    // This function is now only responsible for creating the user in Firebase Auth.
+    await createUserWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error("Error during email sign up:", err);
     throw err;
