@@ -7,8 +7,6 @@ const SettingsPage = ({ user, companyProfile, onProfileUpdate }) => {
   
   return (
     <div className="p-4 sm:p-6 md:p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
-
       <div className="space-y-10">
         <CompanyProfileSettings 
           companyProfile={companyProfile}
