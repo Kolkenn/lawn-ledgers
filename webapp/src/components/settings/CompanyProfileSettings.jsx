@@ -12,6 +12,9 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
   const [logoPreview, setLogoPreview] = useState(companyProfile?.logoUrl || '');
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [uploadStatus, setUploadStatus] = useState(''); // Simple text feedback for upload
+
+  
 
   const isOwner = memberProfile?.role === 'owner';
 
@@ -36,8 +39,9 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      setLogoFile(file);
-      setLogoPreview(URL.createObjectURL(file));
+      setLogoFile(file); // Store the file object
+      setLogoPreview(URL.createObjectURL(file)); // Create a temporary local URL for the preview
+      setUploadStatus(t('settings.logoUploaded')); // Provide instant feedback
     }
   };
 
@@ -45,6 +49,7 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
     e.preventDefault();
     setIsSaving(true);
     setSuccessMessage('');
+    setUploadStatus('');
     const user = auth.currentUser;
     if (!user) return;
 
@@ -53,28 +58,27 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
 
       // 1. If a new logo file was selected, upload it
       if (logoFile) {
+        setUploadStatus(t('settings.uploadingLogo'));
         const storageRef = ref(storage, `company_logos/${user.uid}/${logoFile.name}`);
         const snapshot = await uploadBytes(storageRef, logoFile);
         logoUrl = await getDownloadURL(snapshot.ref);
+        setUploadStatus(''); // Clear status on success
       }
 
-      // 2. Prepare the data to update in Firestore
       const updatedData = { ...formState, logoUrl };
-
-      // 3. Update the document in Firestore
+      
       const companyDocRef = doc(db, 'companies', user.uid);
       await updateDoc(companyDocRef, updatedData);
 
-      // 4. Update the local state in the parent App component
       onProfileUpdate({ ...companyProfile, ...updatedData });
       setSuccessMessage(t('settings.profileUpdated'));
+      setLogoFile(null); // Clear the temporary file state
 
     } catch (error) {
       console.error("Error updating profile:", error);
       alert(error.message);
     } finally {
       setIsSaving(false);
-      // Clear the success message after a few seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
@@ -111,19 +115,28 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
         <div>
           <label className="block text-sm font-medium text-gray-700">{t('settings.logoLabel')}</label>
           <div className="mt-1 flex items-center space-x-6">
-            {/* ... logo preview ... */}
-            <label htmlFor="logoUpload" className={`cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 ${!isOwner ? 'opacity-50 cursor-not-allowed' : ''}`}>
-              <UploadCloud className="inline-block w-5 h-5 mr-2" />
-              {t('settings.changeLogo')}
-            </label>
-            <input id="logoUpload" name="logoUpload" type="file" accept="image/png, image/jpeg" onChange={handleFileChange} className="sr-only" disabled={!isOwner} />
+            <div className="h-16 w-32 bg-gray-100 rounded-md flex items-center justify-center border">
+              {logoPreview ? (
+                <img src={logoPreview} alt="Company Logo Preview" className="h-full w-full object-contain" />
+              ) : (
+                <span className="text-xs text-gray-500">Logo</span>
+              )}
+            </div>
+            <div className="flex flex-col">
+                <label htmlFor="logoUpload" className={`cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 ${!isOwner ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <UploadCloud className="inline-block w-5 h-5 mr-2" />
+                  {t('settings.changeLogo')}
+                </label>
+                <input id="logoUpload" name="logoUpload" type="file" accept="image/png, image/jpeg" onChange={handleFileChange} className="sr-only" disabled={!isOwner} />
+                {uploadStatus && <p className="text-xs text-gray-500 mt-2">{uploadStatus}</p>}
+            </div>
           </div>
           <p className="text-xs text-gray-500 mt-2">{t('settings.logoHelper')}</p>
         </div>
-
+        
         <div className="flex items-center justify-end space-x-4">
             {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
-            {isOwner && ( // Only show the save button to owners
+            {isOwner && (
               <button type="submit" disabled={isSaving} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400">
                   <Save className="w-5 h-5 mr-2" />
                   {isSaving ? 'Saving...' : t('settings.saveChanges')}
