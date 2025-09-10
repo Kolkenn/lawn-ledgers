@@ -1,0 +1,30 @@
+{
+  "welcomeBack": "Bienvenido de Nuevo",
+  "signInWith": "Iniciar sesión con",
+  "signInWithGoogle": "Iniciar sesión con Google",
+  "orContinueWithEmail": "o continuar con correo electrónico",
+  "emailLabel": "Correo Electrónico",
+  "passwordLabel": "Contraseña",
+  "logIn": "Iniciar Sesión",
+  "needAccount": "¿Necesitas una cuenta? Regístrate",
+  "createAccount": "Crea Tu Cuenta",
+  "signUpWith": "Regístrate con",
+  "signUpWithGoogle": "Regístrate con Google",
+  "companyNameLabel": "Nombre de la Compañía",
+  "confirmPasswordLabel": "Confirmar Contraseña",
+  "signUp": "Regístrate",
+  "haveAccount": "¿Ya tienes una cuenta? Inicia Sesión",
+  "oneLastStep": "Un Último Paso",
+  "finishSetup": "Por favor, ingresa el nombre de tu compañía para terminar la configuración de tu cuenta.",
+  "continue": "Continuar",
+  "welcomeTo": "Bienvenido a {{companyName}}",
+  "yourDashboard": "Tu Panel de Control",
+  "logOut": "Cerrar Sesión",
+  "passwordRequirements": {
+    "length": "Al menos 8 caracteres",
+    "uppercase": "Contiene una letra mayúscula",
+    "lowercase": "Contiene una letra minúscula",
+    "number": "Contiene un número",
+    "special": "Contiene un carácter especial"
+  }
+}

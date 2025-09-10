@@ -4,26 +4,39 @@ import { auth, db } from './firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 import { handleLogout } from './firebase/authService'; 
 import { doc, getDoc } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 
 // Import the new page components
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CreateCompanyPage from './pages/CreateCompanyPage';
+import LanguageSwitcher from './components/LanguageSwitcher';
+import LogoutIcon from './components/icons/LogoutIcon';
 
 // A new component for our main dashboard page
-const Dashboard = ({ user, companyProfile, onLogout }) => (
+const Dashboard = ({ user, companyProfile, onLogout }) => {
+  const { t } = useTranslation();
+  
+  return (
   <div className="p-8">
     <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold">
-        Welcome to {companyProfile?.companyName || 'Your Dashboard'}
+        {t('welcomeTo', { companyName: companyProfile?.companyName || t('yourDashboard') })}
       </h1>
-      <button onClick={handleLogout} className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600">
-        Log Out
-      </button>
+      <div className="flex items-center space-x-4">
+          <LanguageSwitcher />
+          <button 
+            onClick={onLogout} 
+            className="cursor-pointer w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"            aria-label={t('logOut')}
+          >
+            <LogoutIcon />
+          </button>
+        </div>
     </div>
     <p className="mt-2 text-gray-600">You are logged in as {user.email}</p>
   </div>
-);
+  )
+};
 
 function App() {
   const [user, setUser] = useState(null);

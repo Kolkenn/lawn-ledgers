@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 // A simple checkmark icon component
 const CheckIcon = ({ className }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -20,13 +22,15 @@ const Requirement = ({ met, text }) => (
 );
 
 const PasswordStrengthIndicator = ({ validation }) => {
+  const { t } = useTranslation();
+  
   return (
     <ul className="mt-2 space-y-1 text-sm">
-      <Requirement met={validation.length} text="At least 8 characters long" />
-      <Requirement met={validation.uppercase} text="Contains an uppercase letter" />
-      <Requirement met={validation.lowercase} text="Contains a lowercase letter" />
-      <Requirement met={validation.number} text="Contains a number" />
-      <Requirement met={validation.special} text="Contains a special character" />
+      <Requirement met={validation.length} text={t('passwordRequirements.length')} />
+      <Requirement met={validation.uppercase} text={t('passwordRequirements.uppercase')} />
+      <Requirement met={validation.lowercase} text={t('passwordRequirements.lowercase')} />
+      <Requirement met={validation.number} text={t('passwordRequirements.number')} />
+      <Requirement met={validation.special} text={t('passwordRequirements.special')} />
     </ul>
   );
 };

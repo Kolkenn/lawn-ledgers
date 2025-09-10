@@ -1,0 +1,30 @@
+{
+  "welcomeBack": "Welcome Back",
+  "signInWith": "Sign in with",
+  "signInWithGoogle": "Sign in with Google",
+  "orContinueWithEmail": "or continue with email",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "logIn": "Log In",
+  "needAccount": "Need an account? Sign Up",
+  "createAccount": "Create Your Account",
+  "signUpWith": "Sign up with",
+  "signUpWithGoogle": "Sign up with Google",
+  "companyNameLabel": "Company Name",
+  "confirmPasswordLabel": "Confirm Password",
+  "signUp": "Sign Up",
+  "haveAccount": "Already have an account? Log In",
+  "oneLastStep": "One Last Step",
+  "finishSetup": "Please enter your company name to finish setting up your account.",
+  "continue": "Continue",
+  "welcomeTo": "Welcome to {{companyName}}",
+  "yourDashboard": "Your Dashboard",
+  "logOut": "Log Out",
+  "passwordRequirements": {
+    "length": "At least 8 characters long",
+    "uppercase": "Contains an uppercase letter",
+    "lowercase": "Contains a lowercase letter",
+    "number": "Contains a number",
+    "special": "Contains a special character"
+  }
+}
