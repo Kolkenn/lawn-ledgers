@@ -12,19 +12,9 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CreateCompanyPage from './pages/CreateCompanyPage';
 import SettingsPage from './pages/SettingsPage';
+import DashboardPage from './pages/DashboardPage';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import useIdleTimer from './hooks/useIdleTimer' 
-
-const DashboardPage = ({ companyProfile }) => {
-    const { t } = useTranslation();
-    return (
-        <div className="p-8">
-             <h1 className="text-3xl font-bold">
-                {t('welcomeTo', { companyName: companyProfile?.companyName || t('yourDashboard') })}
-            </h1>
-        </div>
-    )
-};
 
 function App() {
   const [user, setUser] = useState(null);

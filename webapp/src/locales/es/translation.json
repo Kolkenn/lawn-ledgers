@@ -31,7 +31,16 @@
     "dashboard": "Panel de Control",
     "settings": "Configuración"
   },
-  "logOut": "Cerrar Sesión",
   "expandSidebar": "Expandir barra lateral",
-  "collapseSidebar": "Contraer barra lateral"
+  "collapseSidebar": "Contraer barra lateral",
+  "dashboard": {
+    "upcomingJobs": "Próximos Trabajos",
+    "pendingInvoices": "Facturas Pendientes",
+    "totalPending": "Total Pendiente",
+    "invoiceDue": "Vence:"
+  },
+  "jobStatuses": {
+    "scheduled": "Programado",
+    "inProgress": "En Progreso"
+  }
 }

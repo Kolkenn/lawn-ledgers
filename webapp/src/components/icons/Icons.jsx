@@ -5,11 +5,10 @@ import {
   LayoutDashboard,
   ChevronLeft,
   ChevronRight,
-  Globe, // Using this for the new Language Icon
-  ChevronDown, // For future dropdowns
+  CalendarClock,
+  FileText
 } from 'lucide-react';
 
-// We can also create custom icons here if needed, like the Google one
 const GoogleIcon = () => (
     <svg className="w-5 h-5" viewBox="0 0 24 24">
         <path fillRule="evenodd" clipRule="evenodd" d="M21.8 12.23C21.8 11.53 21.74 10.86 21.62 10.21H12.2V14.1H17.6C17.36 15.42 16.56 16.51 15.34 17.29V19.83H18.9C20.78 18.09 21.8 15.4 21.8 12.23Z" fill="#4285F4"/>
@@ -26,5 +25,7 @@ export {
   LayoutDashboard as DashboardIcon,
   ChevronLeft as CollapseIcon,
   ChevronRight as ExpandIcon,
+  CalendarClock as JobIcon,
+  FileText as InvoiceIcon,
   GoogleIcon,
 };
