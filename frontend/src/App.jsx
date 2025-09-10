@@ -12,6 +12,7 @@ import RegisterPage from './pages/RegisterPage';
 import CreateCompanyPage from './pages/CreateCompanyPage';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import LogoutIcon from './components/icons/LogoutIcon';
+import useIdleTimer from './hooks/useIdleTimer';
 
 // A new component for our main dashboard page
 const Dashboard = ({ user, companyProfile, onLogout }) => {
@@ -42,6 +43,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [companyProfile, setCompanyProfile] = useState(null);
+
+  useIdleTimer(handleLogout);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
