@@ -58,5 +58,17 @@
     "profileUpdated": "Profile updated successfully!",
     "uploadingLogo": "Uploading logo...",
     "logoUploaded": "Logo ready to be saved."
+  },
+  "personalInfo": {
+    "title": "Personal Information",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email Address",
+    "ssoNotice": "Your name is managed by your Google account."
+  },
+  "subscriptionInfo": {
+    "title": "Subscription & Billing",
+    "currentPlan": "Current Plan",
+    "manageButton": "Manage Subscription",
+    "ownerOnlyNotice": "Only the company owner can manage billing."
   }
 }

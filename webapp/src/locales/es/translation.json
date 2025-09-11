@@ -58,5 +58,17 @@
     "profileUpdated": "¡Perfil actualizado con éxito!",
     "uploadingLogo": "Subiendo logo...",
     "logoUploaded": "Logo listo para guardar."
+  },
+  "personalInfo": {
+    "title": "Información Personal",
+    "nameLabel": "Nombre Completo",
+    "emailLabel": "Dirección de Correo Electrónico",
+    "ssoNotice": "Tu nombre es gestionado por tu cuenta de Google."
+  },
+  "subscriptionInfo": {
+    "title": "Suscripción y Facturación",
+    "currentPlan": "Plan Actual",
+    "manageButton": "Gestionar Suscripción",
+    "ownerOnlyNotice": "Solo el propietario de la compañía puede gestionar la facturación."
   }
 }
