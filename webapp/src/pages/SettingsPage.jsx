@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import CompanyProfileSettings from '../components/settings/CompanyProfileSettings';
-import PersonalSettings from '../components/settings/PersonalSettings';
-import SubscriptionSettings from '../components/settings/SubscriptionSettings';
-import IntegrationsSettings from '../components/settings/IntegrationsSettings';
+import CompanyInfoSettings from '../components/settings/CompanyInfo';
+import PersonalSettings from '../components/settings/PersonalInfo';
+import SubscriptionSettings from '../components/settings/Subscription';
+import IntegrationsSettings from '../components/settings/Integrations';
 
 const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) => {
   const { t } = useTranslation();
@@ -13,7 +13,7 @@ const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) 
         {/* Personal Settings Section */}
         <PersonalSettings user={user} />
         {/* Company Profile Settings Section */}
-        <CompanyProfileSettings 
+        <CompanyInfoSettings 
           companyProfile={companyProfile}
           memberProfile={memberProfile}
           onProfileUpdate={onProfileUpdate}

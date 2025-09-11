@@ -5,7 +5,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Save, UploadCloud } from 'lucide-react';
 
-const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate }) => {
+const CompanyInfoSettings = ({ companyProfile, memberProfile, onProfileUpdate }) => {
   const { t } = useTranslation();
   const [formState, setFormState] = useState({ companyName: '', address: '', city: '', state: '', zip: '' });
   const [logoFile, setLogoFile] = useState(null);
@@ -146,4 +146,4 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
   );
 };
 
-export default CompanyProfileSettings;
+export default CompanyInfoSettings;
