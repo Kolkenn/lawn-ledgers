@@ -8,7 +8,9 @@ const PersonalSettings = ({ user }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   // Check the user's sign-in method.
-  const isEmailPasswordUser = user?.providerData[0]?.providerId === 'password';
+  const providerId = user?.providerData[0]?.providerId;
+  const isEmailPasswordUser = providerId === 'password';
+  const providerName = providerId === 'google.com' ? 'Google' : 'your SSO provider';
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ const PersonalSettings = ({ user }) => {
         </div>
 
         {!isEmailPasswordUser && (
-            <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-md border border-blue-200">{t('personalInfo.ssoNotice')}</p>
+            <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-md border border-blue-200">{t('personalInfo.ssoNotice' , { provider: providerName })}</p>
         )}
 
         {isEmailPasswordUser && (
