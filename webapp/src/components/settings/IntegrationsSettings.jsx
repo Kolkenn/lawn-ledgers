@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plug } from 'lucide-react'; // <-- Direct import from the library
+import { Plug } from 'lucide-react';
 
 const IntegrationsSettings = ({ companyProfile, memberProfile }) => {
   const { t } = useTranslation();
