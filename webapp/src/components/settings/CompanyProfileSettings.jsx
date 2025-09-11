@@ -14,8 +14,6 @@ const CompanyProfileSettings = ({ companyProfile, memberProfile, onProfileUpdate
   const [successMessage, setSuccessMessage] = useState('');
   const [uploadStatus, setUploadStatus] = useState(''); // Simple text feedback for upload
 
-  
-
   const isOwner = memberProfile?.role === 'owner';
 
   useEffect(() => {

@@ -27,6 +27,7 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     if (!companyName.trim()) {
       setError('Please enter a company name.');
       return;

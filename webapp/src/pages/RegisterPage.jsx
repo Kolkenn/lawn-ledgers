@@ -13,6 +13,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { t } = useTranslation();
+  const [error, setError] = useState('');
   
   const [validation, setValidation] = useState({
     email: { isValid: true, message: '' },
@@ -42,6 +43,9 @@ const RegisterPage = () => {
   }, [email]);
 
   // 2. Validate Password strength as the user types
+  const setPasswordValidation = (criteria) => {
+    setValidation(v => ({ ...v, password: criteria }));
+  };
   useEffect(() => {
     setPasswordValidation({
       length: password.length >= 8,
@@ -65,18 +69,15 @@ const RegisterPage = () => {
     }}));
   }, [password, confirmPassword]);
 
-  const setPasswordValidation = (criteria) => {
-    setValidation(v => ({ ...v, password: criteria }));
-  };
-
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setError('');
 
     // --- Start Validation ---
     const isPasswordStrong = Object.values(validation.password).every(Boolean);
     if (!validation.email.isValid || !isPasswordStrong || !validation.confirmPassword.isValid) {
-      // This provides a general error if the user tries to submit an invalid form
-      alert("Please correct the errors before signing up.");
+      // If any validation fails, prevent submission and show error
+      setError("Please correct the errors before signing up.");
       return;
     }
 
@@ -85,7 +86,7 @@ const RegisterPage = () => {
       // The onAuthStateChanged listener in App.jsx will handle the redirect
     } catch (err) {
       // The service re-throws the error, so we can catch it here to display to the user
-      alert(err.message);
+      setError(err.message);
       console.error("Error during sign up:", err);
     }
   };
@@ -146,7 +147,7 @@ const RegisterPage = () => {
               value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
               error={!validation.confirmPassword.isValid ? validation.confirmPassword.message : ''}
             />
-
+            {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
             <button className="cursor-pointer w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors" type="submit">
               {t('signUp')}
             </button>
