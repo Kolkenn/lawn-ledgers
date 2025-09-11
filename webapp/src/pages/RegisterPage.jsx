@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 import FormField from '../components/FormField';
-import { GoogleIcon } from '../components/icons/Icons';
+import { GoogleIcon } from '../components/icons/CustomIcons';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const RegisterPage = () => {

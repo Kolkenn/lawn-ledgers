@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+
 import LanguageSwitcher from './LanguageSwitcher';
-import { LogoutIcon } from './icons/Icons';
 import { handleLogout } from '../firebase/authService';
 
 const Header = ({ user, companyProfile }) => {
@@ -43,10 +44,10 @@ const Header = ({ user, companyProfile }) => {
           <LanguageSwitcher />
           <button
             onClick={handleLogout}
-            className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+            className="cursor-pointer w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
             aria-label={t('logOut')}
           >
-            <LogoutIcon />
+            <LogOut />
           </button>
         </div>
       </div>

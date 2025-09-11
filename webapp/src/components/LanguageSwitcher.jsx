@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import {LanguageIcon} from './icons/Icons';
+import { Languages } from 'lucide-react';
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
@@ -32,7 +32,7 @@ const LanguageSwitcher = () => {
         className="cursor-pointer bg-gray-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
         aria-label="Change language"
       >
-        <LanguageIcon />
+        <Languages />
       </button>
 
       {isOpen && (

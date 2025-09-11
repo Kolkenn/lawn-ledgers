@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { upcomingJobs, pendingInvoices } from '../data/mockData';
-import { JobIcon, InvoiceIcon } from '../components/icons/Icons';
+import { CalendarClock, FileText, HandCoins } from 'lucide-react';
 
 const StatCard = ({ title, value, icon }) => (
   <div className="bg-white p-6 rounded-lg shadow-sm flex items-center space-x-4">
@@ -26,17 +26,17 @@ const DashboardPage = ({ companyProfile }) => {
         <StatCard 
           title={t('dashboard.upcomingJobs')}
           value={upcomingJobs.length} 
-          icon={<JobIcon />} 
+          icon={<CalendarClock />} 
         />
         <StatCard 
           title={t('dashboard.pendingInvoices')} 
           value={pendingInvoices.length} 
-          icon={<InvoiceIcon />} 
+          icon={<FileText />} 
         />
         <StatCard 
           title={t('dashboard.totalPending')}
           value={`$${totalPendingAmount.toFixed(2)}`}
-          icon={<InvoiceIcon />} // You can use a different icon
+          icon={<HandCoins />}
         />
       </div>
 

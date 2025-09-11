@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { LayoutDashboard, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
+
 import Header from './Header';
-import { DashboardIcon, SettingsIcon, CollapseIcon, ExpandIcon } from './icons/Icons';
 
 const AppLayout = ({ user, companyProfile }) => {
   const { t } = useTranslation();
@@ -55,12 +56,12 @@ const AppLayout = ({ user, companyProfile }) => {
             className="p-1.5 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer"
             aria-label={isCollapsed ? t('expandSidebar') : t('collapseSidebar')}
           >
-            {isCollapsed ? <ExpandIcon /> : <CollapseIcon />}
+            {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>
         </div>
         <nav className="flex-grow p-4 space-y-2">
-          <NavItem to="/" icon={<DashboardIcon />}>{t('pageTitles.dashboard')}</NavItem>
-          <NavItem to="/settings" icon={<SettingsIcon />}>{t('pageTitles.settings')}</NavItem>
+          <NavItem to="/" icon={<LayoutDashboard />}>{t('pageTitles.dashboard')}</NavItem>
+          <NavItem to="/settings" icon={<Settings />}>{t('pageTitles.settings')}</NavItem>
         </nav>
       </aside>
 
