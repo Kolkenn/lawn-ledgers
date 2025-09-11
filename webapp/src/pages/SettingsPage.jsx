@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import CompanyProfileSettings from '../components/settings/CompanyProfileSettings';
 import PersonalSettings from '../components/settings/PersonalSettings';
 import SubscriptionSettings from '../components/settings/SubscriptionSettings';
-//import IntegrationsSettings from '../components/settings/IntegrationsSettings';
+import IntegrationsSettings from '../components/settings/IntegrationsSettings';
 
 const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) => {
   const { t } = useTranslation();
@@ -21,10 +21,10 @@ const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) 
         {/* Subscription Settings Section */}
         <SubscriptionSettings memberProfile={memberProfile} />
         {/* Integrations Settings Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">Integrations</h2>
-            <p>Stripe connection UI will go here.</p>
-        </div>
+        <IntegrationsSettings 
+            companyProfile={companyProfile}
+            memberProfile={memberProfile}
+        />
       </div>
     </div>
   );
