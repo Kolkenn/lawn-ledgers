@@ -43,8 +43,15 @@
     "scheduled": "Scheduled",
     "inProgress": "In Progress"
   },
-  "settings": {
-    "companyInfo": "Company Information",
+  "personalInfo": {
+    "title": "Personal Information",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email Address",
+    "ssoNotice": "Your name and email is managed by {{provider}}. Changes must be made through them.",
+    "saveChanges": "Save Changes"
+  },
+  "companyInfo": {
+    "title": "Company Information",
     "companyNameLabel": "Company Name",
     "addressLabel": "Address",
     "cityLabel": "City",
@@ -54,21 +61,21 @@
     "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",
     "changeLogo": "Change Logo",
     "saveChanges": "Save Changes",
-    "integrations": "Integrations",
-    "profileUpdated": "Profile updated successfully!",
     "uploadingLogo": "Uploading logo...",
     "logoUploaded": "Logo ready to be saved."
-  },
-  "personalInfo": {
-    "title": "Personal Information",
-    "nameLabel": "Full Name",
-    "emailLabel": "Email Address",
-    "ssoNotice": "Your name is managed by your Google account."
   },
   "subscriptionInfo": {
     "title": "Subscription & Billing",
     "currentPlan": "Current Plan",
     "manageButton": "Manage Subscription",
     "ownerOnlyNotice": "Only the company owner can manage billing."
+  },
+  "integrations": {
+    "title": "Integrations",
+    "stripeConnectTitle": "Stripe Payment Processing",
+    "stripeConnectDesc": "Connect your Stripe account to accept online payments from clients directly on their invoices.",
+    "stripeConnectButton": "Connect Stripe",
+    "stripeConnected": "Stripe Account Connected",
+    "stripeDisconnect": "Disconnect"  
   }
 }

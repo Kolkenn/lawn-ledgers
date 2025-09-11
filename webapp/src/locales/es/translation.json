@@ -43,8 +43,15 @@
     "scheduled": "Programado",
     "inProgress": "En Progreso"
   },
-  "settings": {
-    "companyInfo": "Información de la Compañía",
+  "personalInfo": {
+    "title": "Información Personal",
+    "nameLabel": "Nombre Completo",
+    "emailLabel": "Dirección de Correo Electrónico",
+    "ssoNotice": "Tu nombre es gestionado por {{provider}}. Los cambios deben hacerse a través de ellos.",
+    "saveChanges": "Guardar Cambios"
+  },
+  "companyInfo": {
+    "title": "Información de la Compañía",
     "companyNameLabel": "Nombre de la Compañía",
     "addressLabel": "Dirección",
     "cityLabel": "Ciudad",
@@ -54,21 +61,21 @@
     "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
     "changeLogo": "Cambiar Logo",
     "saveChanges": "Guardar Cambios",
-    "integrations": "Integraciones",
-    "profileUpdated": "¡Perfil actualizado con éxito!",
     "uploadingLogo": "Subiendo logo...",
     "logoUploaded": "Logo listo para guardar."
-  },
-  "personalInfo": {
-    "title": "Información Personal",
-    "nameLabel": "Nombre Completo",
-    "emailLabel": "Dirección de Correo Electrónico",
-    "ssoNotice": "Tu nombre es gestionado por tu cuenta de Google."
   },
   "subscriptionInfo": {
     "title": "Suscripción y Facturación",
     "currentPlan": "Plan Actual",
     "manageButton": "Gestionar Suscripción",
     "ownerOnlyNotice": "Solo el propietario de la compañía puede gestionar la facturación."
+  },
+  "integrations": {
+    "title": "Integraciones",
+    "stripeConnectTitle": "Procesamiento de Pagos con Stripe",
+    "stripeConnectDesc": "Conecta tu cuenta de Stripe para aceptar pagos en línea de tus clientes directamente en sus facturas.",
+    "stripeConnectButton": "Conectar Stripe",
+    "stripeConnected": "Cuenta de Stripe Conectada",
+    "stripeDisconnect": "Desconectar"
   }
 }
