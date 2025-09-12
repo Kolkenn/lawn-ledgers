@@ -31,12 +31,12 @@ const Header = ({ user, companyProfile }) => {
           {companyProfile?.logoUrl && (
             <img 
               src={companyProfile.logoUrl} 
-              alt={`${companyProfile.companyName} logo`}
+              alt={`${companyProfile.name} logo`}
               className="w-8 h-8 rounded-md object-contain mr-3"
             />
           )}
           <h1 className="text-xl font-semibold text-gray-800">
-            {companyProfile?.companyName}
+            {companyProfile?.name}
             {pageTitle && <span className="text-gray-400 font-normal"> - {pageTitle}</span>}
           </h1>
         </div>

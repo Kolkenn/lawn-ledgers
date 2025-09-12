@@ -4,38 +4,62 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  getAdditionalUserInfo
 } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { 
+  doc, 
+  setDoc, 
+  serverTimestamp, 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  writeBatch 
+} from "firebase/firestore";
 
 /**
- * Initiates the Google Sign-In popup flow.
- * This function can be used for both login and registration.
- * Firebase automatically handles creating a new user or signing in an existing one.
- * The onAuthStateChanged listener in App.jsx will handle the result.
+ * Processes an invitation for a newly registered user.
+ * If the user has a valid pending invitation, they are added to the specified company as a member.
+ * 
+ * @param {object} user - The Firebase user object of the newly registered user.
+ * @param {string} inviteCode - The invitation code to process.
  */
-export const handleGoogleSignIn = async () => {
-  const provider = new GoogleAuthProvider();
-  try {
-    await signInWithPopup(auth, provider);
-    // No need to return anything, the listener in App.jsx takes over
-  } catch (err) {
-    // Log the error for debugging purposes.
-    // We could pass an error handler function here in the future if needed.
-    console.error("Error during Google sign-in:", err);
-    // We can re-throw the error if we want the component to handle it
-    throw err;
-  }
+const processInvite = async (user, inviteCode) => {
+    if (!inviteCode) return; // Do nothing if there's no code
+
+    const inviteDocRef = doc(db, 'invitations', inviteCode);
+    const inviteSnap = await getDoc(inviteDocRef);
+
+    // Verify the invite exists, is pending, and is for the correct user
+    if (inviteSnap.exists() && inviteSnap.data().status === 'pending' && inviteSnap.data().email === user.email) {
+        const inviteData = inviteSnap.data();
+        const companyId = inviteData.companyId;
+
+        const batch = writeBatch(db);
+        const newMemberRef = doc(db, "companies", companyId, "members", user.uid);
+        batch.set(newMemberRef, {
+            email: user.email,
+            role: inviteData.role,
+            joinedAt: serverTimestamp(),
+        });
+        batch.update(inviteDocRef, { status: 'accepted', acceptedBy: user.uid });
+        await batch.commit();
+        console.log("Invite processed successfully!");
+    } else {
+        console.warn("Invalid or already accepted invite code.");
+    }
 };
 
-/**
- * Signs a new user up with email and password.
- * The onAuthStateChanged listener will handle redirecting to the company creation page.
- */
+export const handleGoogleSignIn = async () => {
+  await signInWithPopup(auth, new GoogleAuthProvider());
+};
+
 export const handleEmailSignUp = async (email, password) => {
   try {
     // This function is now only responsible for creating the user in Firebase Auth.
-    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await processInvite(userCredential.user, inviteCode);
   } catch (err) {
     console.error("Error during email sign up:", err);
     throw err;

@@ -19,7 +19,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile, onProfileUpdate })
   useEffect(() => {
     if (companyProfile) {
       setFormState({
-        companyName: companyProfile.companyName || '',
+        name: companyProfile.name || '',
         address: companyProfile.address || '',
         city: companyProfile.city || '',
         state: companyProfile.state || '',
@@ -90,7 +90,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile, onProfileUpdate })
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">{t('companyInfo.companyNameLabel')}</label>
-            <input type="text" id="companyName" value={formState.companyName} onChange={handleInputChange} className={inputClasses} disabled={!isOwner} />
+            <input type="text" id="companyName" value={formState.name} onChange={handleInputChange} className={inputClasses} disabled={!isOwner} />
           </div>
           <div>
             <label htmlFor="address" className="block text-sm font-medium text-gray-700">{t('companyInfo.addressLabel')}</label>

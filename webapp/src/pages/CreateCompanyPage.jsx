@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { auth, db } from '../firebase/config';
-import { doc, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { doc, serverTimestamp, writeBatch, collection } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -39,27 +39,32 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
         // Use a batch write to ensure both documents are created atomically
         const batch = writeBatch(db);
 
-        // 1. Define the reference for the main company document
-        const companyDocRef = doc(db, "companies", user.uid);
+        // 1. Create the new company document. We'll use a random ID for scalability.
+        const companyDocRef = doc(collection(db, "companies"));
         batch.set(companyDocRef, {
+          name: companyName.trim(),
           ownerUid: user.uid,
-          companyName: companyName.trim(),
           createdAt: serverTimestamp(),
         });
 
-        // 2. Define the reference for the owner's document in the members sub-collection
-        const memberDocRef = doc(db, "companies", user.uid, "members", user.uid);
+        // 2. Create the owner's record in the company's 'members' sub-collection.
+        const memberDocRef = doc(db, "companies", companyDocRef.id, "members", user.uid);
         batch.set(memberDocRef, {
+          uid: user.uid,
           email: user.email,
-          role: "owner", // <-- Assign the 'owner' role
+          role: "owner",
           joinedAt: serverTimestamp(),
         });
 
-        // 3. Commit the batch
-        await batch.commit();
+        // 3. Create the user's record in their own 'memberships' sub-collection.
+        const userMembershipRef = doc(db, "users", user.uid, "memberships", companyDocRef.id);
+        batch.set(userMembershipRef, {
+          companyName: companyName.trim(),
+          companyId: companyDocRef.id,
+          role: "owner",
+        });
 
-        // Before navigating, we call the function passed from App.jsx.
-        // This tells the parent component to update its state immediately.
+        await batch.commit();
         await onProfileCreated();
 
         navigate('/');

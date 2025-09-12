@@ -3,6 +3,7 @@ import CompanyInfoSettings from '../components/settings/CompanyInfo';
 import PersonalSettings from '../components/settings/PersonalInfo';
 import SubscriptionSettings from '../components/settings/Subscription';
 import IntegrationsSettings from '../components/settings/Integrations';
+import TeamManagement from '../components/settings/TeamManagement';
 
 const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) => {
   const { t } = useTranslation();
@@ -18,6 +19,8 @@ const SettingsPage = ({ user, companyProfile, memberProfile, onProfileUpdate }) 
           memberProfile={memberProfile}
           onProfileUpdate={onProfileUpdate}
         />
+        {/* Team Management Section */}
+        {/* <TeamManagement memberProfile={memberProfile} /> */}
         {/* Subscription Settings Section */}
         <SubscriptionSettings memberProfile={memberProfile} />
         {/* Integrations Settings Section */}
