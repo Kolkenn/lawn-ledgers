@@ -48,7 +48,8 @@
     "nameLabel": "Nombre Completo",
     "emailLabel": "Dirección de Correo Electrónico",
     "ssoNotice": "Tu nombre es gestionado por {{provider}}. Los cambios deben hacerse a través de ellos.",
-    "saveChanges": "Guardar Cambios"
+    "saveChanges": "Guardar Cambios",
+    "savingChanges": "Guardando..."
   },
   "companyInfo": {
     "title": "Información de la Compañía",

@@ -48,7 +48,8 @@
     "nameLabel": "Full Name",
     "emailLabel": "Email Address",
     "ssoNotice": "Your name and email is managed by {{provider}}. Changes must be made through them.",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "savingChanges": "Saving..."
   },
   "companyInfo": {
     "title": "Company Information",
@@ -76,7 +77,7 @@
     "stripeConnectDesc": "Connect your Stripe account to accept online payments from clients directly on their invoices.",
     "stripeConnectButton": "Connect Stripe",
     "stripeConnected": "Stripe Account Connected",
-    "stripeDisconnect": "Disconnect"  
+    "stripeDisconnect": "Disconnect"
   },
   "teamManagement": {
     "title": "Team Management",

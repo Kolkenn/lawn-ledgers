@@ -1,20 +1,33 @@
 // src/App.jsx
-import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { auth, db } from './firebase/config';
-import { onAuthStateChanged } from 'firebase/auth';
-import { collection, doc, getDoc, getDocs, writeBatch, serverTimestamp } from "firebase/firestore";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+import { auth, db } from "./firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  writeBatch,
+  serverTimestamp,
+} from "firebase/firestore";
 
 // Import all necessary components and services
-import useIdleTimer from './hooks/useIdleTimer';
-import { handleLogout } from './firebase/authService';
-import AppLayout from './components/AppLayout';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import CreateCompanyPage from './pages/CreateCompanyPage';
-import SettingsPage from './pages/SettingsPage';
-import DashboardPage from './pages/DashboardPage';
-import CompanySelectionPage from './pages/CompanySelectionPage';
+import useIdleTimer from "./hooks/useIdleTimer";
+import { handleLogout } from "./firebase/authService";
+import AppLayout from "./components/AppLayout";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import CreateCompanyPage from "./pages/CreateCompanyPage";
+import SettingsPage from "./pages/SettingsPage";
+import DashboardPage from "./pages/DashboardPage";
+import CompanySelectionPage from "./pages/CompanySelectionPage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -29,7 +42,9 @@ function App() {
     if (!userToQuery) return;
 
     const companySnap = await getDoc(doc(db, "companies", companyId));
-    const memberSnap = await getDoc(doc(db, "companies", companyId, "members", userToQuery.uid));
+    const memberSnap = await getDoc(
+      doc(db, "companies", companyId, "members", userToQuery.uid)
+    );
 
     if (companySnap.exists() && memberSnap.exists()) {
       setActiveCompany({ id: companySnap.id, ...companySnap.data() });
@@ -39,25 +54,35 @@ function App() {
   }, []);
 
   // Function to load user session data
-  const loadUserSession = useCallback(async (currentUser) => {
-    if (currentUser) {
-      setUser(currentUser);
-      const membershipsRef = collection(db, "users", currentUser.uid, "memberships");
-      const membershipSnapshot = await getDocs(membershipsRef);
-      const userMemberships = membershipSnapshot.docs.map(doc => doc.data());
-      setMemberships(userMemberships);
+  const loadUserSession = useCallback(
+    async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const membershipsRef = collection(
+          db,
+          "users",
+          currentUser.uid,
+          "memberships"
+        );
+        const membershipSnapshot = await getDocs(membershipsRef);
+        const userMemberships = membershipSnapshot.docs.map((doc) =>
+          doc.data()
+        );
+        setMemberships(userMemberships);
 
-      if (userMemberships.length === 1) {
-        await setActiveCompanyById(userMemberships[0].companyId, currentUser);
+        if (userMemberships.length === 1) {
+          await setActiveCompanyById(userMemberships[0].companyId, currentUser);
+        }
+      } else {
+        setUser(null);
+        setMemberships([]);
+        setActiveCompany(null);
+        setActiveRole(null);
       }
-    } else {
-      setUser(null);
-      setMemberships([]);
-      setActiveCompany(null);
-      setActiveRole(null);
-    }
-  }, [setActiveCompanyById]);;
-  
+    },
+    [setActiveCompanyById]
+  );
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(true);
@@ -72,12 +97,11 @@ function App() {
     await loadUserSession(auth.currentUser);
     setLoading(false);
   }, [loadUserSession]);
-  
+
   const doLogout = async () => {
     await handleLogout();
-    navigate('/');
   };
-  
+
   useIdleTimer(doLogout);
 
   // The main loading spinner for the entire application.
@@ -93,7 +117,12 @@ function App() {
       return <Navigate to="/create-company" />;
     }
     if (memberships.length > 1 && !activeCompany) {
-      return <CompanySelectionPage memberships={memberships} onSelectCompany={setActiveCompanyById} />;
+      return (
+        <CompanySelectionPage
+          memberships={memberships}
+          onSelectCompany={setActiveCompanyById}
+        />
+      );
     }
     if (activeCompany) {
       // The user is fully authenticated. Render the main layout.
@@ -107,30 +136,47 @@ function App() {
   return (
     <Routes>
       {/* Public Routes for logged-out users */}
-      <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
-      <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
-      <Route 
-        path="/create-company" 
-        element={user && memberships.length === 0 ? <CreateCompanyPage onProfileCreated={handleProfileCreatedOrUpdated} /> : <Navigate to="/" />}
+      <Route
+        path="/login"
+        element={!user ? <LoginPage /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/register"
+        element={!user ? <RegisterPage /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/create-company"
+        element={
+          user && memberships.length === 0 ? (
+            <CreateCompanyPage
+              onProfileCreated={handleProfileCreatedOrUpdated}
+            />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
       />
 
       {/* --- Protected Routes --- */}
       {/* All protected routes are now children of the ProtectedRoutes component. */}
       <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<DashboardPage companyProfile={activeCompany} />} />
-        <Route 
-          path="/settings" 
+        <Route
+          path="/"
+          element={<DashboardPage companyProfile={activeCompany} />}
+        />
+        <Route
+          path="/settings"
           element={
-            <SettingsPage 
-              user={user} 
-              companyProfile={activeCompany} 
-              memberProfile={{ role: activeRole }} 
+            <SettingsPage
+              user={user}
+              companyProfile={activeCompany}
+              memberProfile={{ role: activeRole }}
               onProfileUpdate={handleProfileCreatedOrUpdated}
             />
-          } 
+          }
         />
       </Route>
-      
+
       {/* A final catch-all to redirect any unknown paths for logged-in users */}
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />
     </Routes>
