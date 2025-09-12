@@ -58,10 +58,10 @@
   },
   "companyInfo": {
     "title": "Company Information",
-    "companyNameLabel": "Company Name",
+    "nameLabel": "Company Name",
     "addressLabel": "Address",
     "cityLabel": "City",
-    "stateLabel": "State / Province",
+    "stateLabel": "State",
     "zipLabel": "Zip / Postal Code",
     "logoLabel": "Company Logo",
     "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",

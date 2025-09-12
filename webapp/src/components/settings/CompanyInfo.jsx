@@ -12,7 +12,7 @@ const CompanyInfoSettings = ({
 }) => {
   const { t } = useTranslation();
   const [formState, setFormState] = useState({
-    companyName: "",
+    name: "",
     address: "",
     city: "",
     state: "",
@@ -105,14 +105,14 @@ const CompanyInfoSettings = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
-              htmlFor="companyName"
+              htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              {t("companyInfo.companyNameLabel")}
+              {t("companyInfo.nameLabel")}
             </label>
             <input
               type="text"
-              id="companyName"
+              id="name"
               value={formState.name}
               onChange={handleInputChange}
               className={inputClasses}

@@ -58,10 +58,10 @@
   },
   "companyInfo": {
     "title": "Información de la Compañía",
-    "companyNameLabel": "Nombre de la Compañía",
+    "nameLabel": "Nombre de la Compañía",
     "addressLabel": "Dirección",
     "cityLabel": "Ciudad",
-    "stateLabel": "Estado / Provincia",
+    "stateLabel": "Estado",
     "zipLabel": "Código Postal",
     "logoLabel": "Logo de la Compañía",
     "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
