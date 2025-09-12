@@ -86,7 +86,6 @@ const RegisterPage = () => {
 
     // --- Start Validation ---
     if (fullName.trim() === "") {
-      // In a real app, you'd set an error state here. For now, an alert is fine.
       setError("A full name is required.");
       return;
     }
@@ -95,18 +94,17 @@ const RegisterPage = () => {
       return;
     }
     const isPasswordStrong = Object.values(validation.password).every(Boolean);
-    if (
-      !validation.email.isValid ||
-      !isPasswordStrong ||
-      !validation.confirmPassword.isValid
-    ) {
-      // If any validation fails, prevent submission and show error
-      setError("Please correct the errors before signing up.");
+    if (!isPasswordStrong) {
+      setError("Password does not meet the required criteria.");
+      return;
+    }
+    if (!validation.confirmPassword.isValid) {
+      setError("Passwords do not match.");
       return;
     }
 
     try {
-      await handleEmailSignUp(email, password);
+      await handleEmailSignUp(email, password, fullName);
       // The onAuthStateChanged listener in App.jsx will handle the redirect
     } catch (err) {
       // The service re-throws the error, so we can catch it here to display to the user
