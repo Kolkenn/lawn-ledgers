@@ -77,5 +77,18 @@
     "stripeConnectButton": "Conectar Stripe",
     "stripeConnected": "Cuenta de Stripe Conectada",
     "stripeDisconnect": "Desconectar"
+  },
+  "teamManagement": {
+    "title": "Gestión de Equipo",
+    "inviteTitle": "Invitar a un Nuevo Miembro del Equipo",
+    "emailLabel": "Dirección de Correo Electrónico",
+    "roleLabel": "Rol",
+    "roleOwner": "Propietario",
+    "roleCrew": "Equipo",
+    "sendInvite": "Enviar Invitación",
+    "currentMembers": "Miembros Actuales",
+    "pendingInvites": "Invitaciones Pendientes",
+    "inviteSent": "¡Invitación enviada con éxito!",
+    "alreadyMember": "Este usuario ya es miembro de esta compañía."
   }
 }
