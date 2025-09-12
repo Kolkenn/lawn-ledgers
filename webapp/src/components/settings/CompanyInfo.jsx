@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { db, storage, auth } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Save, UploadCloud } from "lucide-react";
@@ -21,23 +21,34 @@ const CompanyInfoSettings = ({
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(companyProfile?.logoUrl || "");
   const [isSaving, setIsSaving] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [uploadStatus, setUploadStatus] = useState(""); // Simple text feedback for upload
-
+  const [statusMessage, setStatusMessage] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [originalFormState, setOriginalFormState] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
   const isOwner = memberProfile?.role === "owner";
 
   useEffect(() => {
     if (companyProfile) {
-      setFormState({
+      const initialState = {
         name: companyProfile.name || "",
         address: companyProfile.address || "",
         city: companyProfile.city || "",
         state: companyProfile.state || "",
         zip: companyProfile.zip || "",
-      });
+      };
+      setFormState(initialState);
+      setOriginalFormState(initialState);
       setLogoPreview(companyProfile.logoUrl || "");
     }
   }, [companyProfile]);
+
+  useEffect(() => {
+    if (originalFormState) {
+      const hasChanged =
+        JSON.stringify(formState) !== JSON.stringify(originalFormState);
+      setIsDirty(hasChanged);
+    }
+  }, [formState, originalFormState]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -56,40 +67,43 @@ const CompanyInfoSettings = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-    setSuccessMessage("");
+    setStatusMessage({ text: "", type: "" });
     setUploadStatus("");
-    const user = auth.currentUser;
-    if (!user) return;
+    const companyId = companyProfile?.id;
 
     try {
-      let logoUrl = companyProfile?.logoUrl || "";
+      // let logoUrl = companyProfile?.logoUrl || "";
 
-      // 1. If a new logo file was selected, upload it
-      if (logoFile) {
-        setUploadStatus(t("companyInfo.uploadingLogo"));
-        const storageRef = ref(
-          storage,
-          `company_logos/${user.uid}/${logoFile.name}`
-        );
-        const snapshot = await uploadBytes(storageRef, logoFile);
-        logoUrl = await getDownloadURL(snapshot.ref);
-        setUploadStatus(""); // Clear status on success
-      }
+      // // Upload new logo if a file is selected
+      // if (logoFile) {
+      //   setUploadStatus(t("companyInfo.uploadingLogo"));
+      //   const storageRef = ref(
+      //     storage,
+      //     `${companyId}/logo/logo.${logoFile.name.split(".").pop()}`
+      //   );
+      //   const snapshot = await uploadBytes(storageRef, logoFile);
+      //   logoUrl = await getDownloadURL(snapshot.ref);
+      //   setUploadStatus(""); // Clear status on success
+      // }
 
-      const updatedData = { ...formState, logoUrl };
-
-      const companyDocRef = doc(db, "companies", user.uid);
+      const updatedData = { ...formState };
+      const companyDocRef = doc(db, "companies", companyId);
       await updateDoc(companyDocRef, updatedData);
 
       onProfileUpdate({ ...companyProfile, ...updatedData });
-      setSuccessMessage(t("companyInfo.profileUpdated"));
+      setStatusMessage({
+        text: t("companyInfo.status.success"),
+        type: "success",
+      });
       setLogoFile(null); // Clear the temporary file state
     } catch (error) {
+      setStatusMessage(t("companyInfo.status.error"));
       console.error("Error updating profile:", error);
-      alert(error.message);
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate a short delay for UX
+      setStatusMessage({ text: "", type: "" });
+      setIsDirty(false);
       setIsSaving(false);
-      setTimeout(() => setSuccessMessage(""), 3000);
     }
   };
 
@@ -97,12 +111,16 @@ const CompanyInfoSettings = ({
     "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed";
 
   return (
+    // Main Container
     <div className="bg-white p-6 rounded-lg shadow-sm">
+      {/* Title Section */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
         {t("companyInfo.title")}
       </h2>
+      {/* Company Info Container */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Company Name Section */}
           <div>
             <label
               htmlFor="name"
@@ -119,6 +137,7 @@ const CompanyInfoSettings = ({
               disabled={!isOwner}
             />
           </div>
+          {/* Company Address Section */}
           <div>
             <label
               htmlFor="address"
@@ -135,6 +154,7 @@ const CompanyInfoSettings = ({
               disabled={!isOwner}
             />
           </div>
+          {/* Company City Section */}
           <div>
             <label
               htmlFor="city"
@@ -151,6 +171,7 @@ const CompanyInfoSettings = ({
               disabled={!isOwner}
             />
           </div>
+          {/* Company State Section */}
           <div>
             <label
               htmlFor="state"
@@ -167,6 +188,7 @@ const CompanyInfoSettings = ({
               disabled={!isOwner}
             />
           </div>
+          {/* Company ZIP Section */}
           <div>
             <label
               htmlFor="zip"
@@ -184,12 +206,15 @@ const CompanyInfoSettings = ({
             />
           </div>
         </div>
-
+        {/* Company Logo Container */}
         <div>
+          {/* Logo Label */}
           <label className="block text-sm font-medium text-gray-700">
             {t("companyInfo.logoLabel")}
           </label>
+          {/* Logo Container */}
           <div className="mt-1 flex items-center space-x-6">
+            {/* Logo Image Display Box */}
             <div className="h-16 w-32 bg-gray-100 rounded-md flex items-center justify-center border">
               {logoPreview ? (
                 <img
@@ -201,6 +226,7 @@ const CompanyInfoSettings = ({
                 <span className="text-xs text-gray-500">Logo</span>
               )}
             </div>
+            {/* Logo Upload Button */}
             <div className="flex flex-col">
               <label
                 htmlFor="logoUpload"
@@ -225,23 +251,34 @@ const CompanyInfoSettings = ({
               )}
             </div>
           </div>
+          {/* Helper Text */}
           <p className="text-xs text-gray-500 mt-2">
             {t("companyInfo.logoHelper")}
           </p>
         </div>
-
+        {/* Action Buttons Container */}
         <div className="flex items-center justify-end space-x-4">
-          {successMessage && (
-            <p className="text-sm text-green-600">{successMessage}</p>
+          {statusMessage.text && (
+            <p
+              className={`text-sm ${
+                statusMessage.type === "error"
+                  ? "text-red-500"
+                  : "text-green-600"
+              }`}
+            >
+              {statusMessage.text}
+            </p>
           )}
-          {isOwner && (
+          {isOwner && isDirty && (
             <button
               type="submit"
               disabled={isSaving}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400"
             >
               <Save className="w-5 h-5 mr-2" />
-              {isSaving ? "Saving..." : t("companyInfo.saveChanges")}
+              {isSaving
+                ? t("companyInfo.savingChanges")
+                : t("companyInfo.saveChanges")}
             </button>
           )}
         </div>

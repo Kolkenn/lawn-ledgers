@@ -66,9 +66,14 @@
     "logoLabel": "Company Logo",
     "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",
     "changeLogo": "Change Logo",
-    "saveChanges": "Save Changes",
     "uploadingLogo": "Uploading logo...",
-    "logoUploaded": "Logo ready to be saved."
+    "logoUploaded": "Logo ready to be saved.",
+    "saveChanges": "Save Changes",
+    "savingChanges": "Saving...",
+    "status": {
+      "success": "Info updated successfully!",
+      "error": "Error updating info. Please try again."
+    }
   },
   "subscriptionInfo": {
     "title": "Subscription & Billing",
