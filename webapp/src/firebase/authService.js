@@ -1,65 +1,48 @@
-import { auth, db } from './config';
+import { auth, db } from "./config";
 import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  getAdditionalUserInfo
+  updateProfile,
+  getAdditionalUserInfo,
 } from "firebase/auth";
-import { 
-  doc, 
-  setDoc, 
-  serverTimestamp, 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  writeBatch 
-} from "firebase/firestore";
 
 /**
- * Processes an invitation for a newly registered user.
- * If the user has a valid pending invitation, they are added to the specified company as a member.
- * 
- * @param {object} user - The Firebase user object of the newly registered user.
- * @param {string} inviteCode - The invitation code to process.
+ * Initiates the Google Sign-In popup flow. Returns the sign-in result.
+ * The application's main logic will use the result to determine if the user is new.
  */
-const processInvite = async (user, inviteCode) => {
-    if (!inviteCode) return; // Do nothing if there's no code
-
-    const inviteDocRef = doc(db, 'invitations', inviteCode);
-    const inviteSnap = await getDoc(inviteDocRef);
-
-    // Verify the invite exists, is pending, and is for the correct user
-    if (inviteSnap.exists() && inviteSnap.data().status === 'pending' && inviteSnap.data().email === user.email) {
-        const inviteData = inviteSnap.data();
-        const companyId = inviteData.companyId;
-
-        const batch = writeBatch(db);
-        const newMemberRef = doc(db, "companies", companyId, "members", user.uid);
-        batch.set(newMemberRef, {
-            email: user.email,
-            role: inviteData.role,
-            joinedAt: serverTimestamp(),
-        });
-        batch.update(inviteDocRef, { status: 'accepted', acceptedBy: user.uid });
-        await batch.commit();
-        console.log("Invite processed successfully!");
-    } else {
-        console.warn("Invalid or already accepted invite code.");
-    }
-};
-
 export const handleGoogleSignIn = async () => {
-  await signInWithPopup(auth, new GoogleAuthProvider());
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result; // Return the full result for the caller to inspect
+  } catch (err) {
+    console.error("Error during Google sign-in:", err);
+    throw err;
+  }
 };
 
-export const handleEmailSignUp = async (email, password) => {
+/**
+ * Signs a new user up with email and password and sets their display name.
+ * It no longer handles invite logic.
+ */
+export const handleEmailSignUp = async (email, password, fullName) => {
   try {
-    // This function is now only responsible for creating the user in Firebase Auth.
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await processInvite(userCredential.user, inviteCode);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    // After creating the user, update their Firebase Auth profile with their name.
+    if (userCredential.user && fullName) {
+      await updateProfile(userCredential.user, {
+        displayName: fullName.trim(),
+      });
+    }
+    return userCredential;
   } catch (err) {
     console.error("Error during email sign up:", err);
     throw err;
