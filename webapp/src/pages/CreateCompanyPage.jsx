@@ -3,8 +3,10 @@ import { auth, db } from '../firebase/config';
 import { doc, serverTimestamp, writeBatch, collection } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { LogOut } from 'lucide-react';
 
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { handleLogout } from '../firebase/authService';
 
 // A local, self-contained FormField component for this page
 const FormField = ({ id, label, type, placeholder, value, onChange, error }) => (
@@ -79,9 +81,18 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-      <div className="absolute top-4 right-4">
+      {/* Top Right Action Buttons */}
+      <div className="flex items-center space-x-2 absolute top-4 right-4">
         <LanguageSwitcher />
+        <button
+        onClick={handleLogout}
+        className="cursor-pointer w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+        aria-label={t('logOut')}
+        >
+          <LogOut />
+        </button>
       </div>
+      {/* Main Component */}
       <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">{t('oneLastStep')}</h1>
         <p className="text-center text-gray-600 mb-6">{t('finishSetup')}</p>
