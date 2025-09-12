@@ -49,7 +49,12 @@
     "emailLabel": "Dirección de Correo Electrónico",
     "ssoNotice": "Tu nombre es gestionado por {{provider}}. Los cambios deben hacerse a través de ellos.",
     "saveChanges": "Guardar Cambios",
-    "savingChanges": "Guardando..."
+    "savingChanges": "Guardando...",
+    "status": {
+      "empty": "Nombre no puede estar vacío.",
+      "success": "¡Nombre actualizado con éxito!",
+      "error": "Error al actualizar el nombre. Por favor, inténtalo de nuevo."
+    }
   },
   "companyInfo": {
     "title": "Información de la Compañía",

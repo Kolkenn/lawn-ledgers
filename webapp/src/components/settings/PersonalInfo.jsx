@@ -3,7 +3,13 @@ import { useTranslation } from "react-i18next";
 import { Save } from "lucide-react";
 import { auth, db } from "../../firebase/config";
 import { updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 
 const PersonalSettings = ({ user, companyProfile }) => {
   const { t } = useTranslation();
@@ -52,36 +58,49 @@ const PersonalSettings = ({ user, companyProfile }) => {
     e.preventDefault();
     setStatusMessage({ text: "", type: "" });
     if (displayName.trim() === "") {
-      setStatusMessage({ text: "Name cannot be empty.", type: "error" });
+      setStatusMessage({ text: t("personalInfo.status.empty"), type: "error" });
       return;
     }
     setIsSaving(true);
     try {
-      // Update Firebase Auth profile
-      await updateProfile(auth.currentUser, {
-        displayName: displayName.trim(),
+      const newName = displayName.trim();
+
+      // 1. Update the master profile in Firebase Authentication
+      await updateProfile(auth.currentUser, { displayName: newName });
+
+      // 2. Fetch all of the user's company memberships
+      const membershipsRef = collection(db, "users", user.uid, "memberships");
+      const membershipSnapshot = await getDocs(membershipsRef);
+
+      // 3. Create a batch write to update all member documents atomically
+      const batch = writeBatch(db);
+      membershipSnapshot.forEach((membershipDoc) => {
+        const companyId = membershipDoc.data().companyId;
+        const memberDocRef = doc(
+          db,
+          "companies",
+          companyId,
+          "members",
+          user.uid
+        );
+        batch.update(memberDocRef, { displayName: newName });
       });
-      // Map Member document in Firestore
-      const memberDocRef = doc(
-        db,
-        "companies",
-        companyProfile.id,
-        "members",
-        user.uid
-      );
-      // Update Firestore member document
-      await updateDoc(memberDocRef, { displayName: displayName.trim() });
 
-      setStatusMessage({ text: "Name updated successfully!", type: "success" });
-      console.log("Name updated successfully");
+      // 4. Commit the batch
+      await batch.commit();
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setIsDirty(false);
-      setStatusMessage({ text: "", type: "" });
+      setStatusMessage({
+        text: t("personalInfo.status.success"),
+        type: "success",
+      });
+      console.log("Profile updated successfully across all memberships.");
     } catch (err) {
-      setStatusMessage({ text: err.message, type: "error" });
+      setStatusMessage(t("personalInfo.status.error"));
       console.error("Error updating profile:", err);
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate a short delay for UX
+      setStatusMessage({ text: "", type: "" });
+      setIsDirty(false);
       setIsSaving(false);
     }
   };

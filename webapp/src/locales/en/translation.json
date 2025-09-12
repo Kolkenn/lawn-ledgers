@@ -49,7 +49,12 @@
     "emailLabel": "Email Address",
     "ssoNotice": "Your name and email is managed by {{provider}}. Changes must be made through them.",
     "saveChanges": "Save Changes",
-    "savingChanges": "Saving..."
+    "savingChanges": "Saving...",
+    "status": {
+      "empty": "Name cannot be empty.",
+      "success": "Name updated successfully!",
+      "error": "Error updating name. Please try again."
+    }
   },
   "companyInfo": {
     "title": "Company Information",
