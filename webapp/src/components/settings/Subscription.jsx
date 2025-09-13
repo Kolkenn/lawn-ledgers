@@ -11,13 +11,13 @@ const SubscriptionSettings = ({ memberProfile }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        {t("subscriptionInfo.title")}
+        {t("settings.subscriptionInfo.title")}
       </h2>
       <div className="space-y-4">
         <div className="flex justify-between items-center p-4 bg-gray-50 rounded-md border">
           <div>
             <p className="text-sm font-medium text-gray-500">
-              {t("subscriptionInfo.currentPlan")}
+              {t("settings.subscriptionInfo.currentPlan")}
             </p>
             <p className="text-lg font-bold text-gray-900">{currentPlan}</p>
           </div>
@@ -25,12 +25,12 @@ const SubscriptionSettings = ({ memberProfile }) => {
             disabled={!isOwner}
             className="px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {t("subscriptionInfo.manageButton")}
+            {t("settings.subscriptionInfo.manageButton")}
           </button>
         </div>
         {!isOwner && (
           <p className="text-sm text-gray-500">
-            {t("subscriptionInfo.ownerOnlyNotice")}
+            {t("settings.subscriptionInfo.ownerOnlyNotice")}
           </p>
         )}
       </div>

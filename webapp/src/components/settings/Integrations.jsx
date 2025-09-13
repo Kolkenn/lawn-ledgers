@@ -35,7 +35,7 @@ const IntegrationsSettings = ({ companyProfile, memberProfile }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        {t("integrations.title")}
+        {t("settings.integrations.title")}
       </h2>
       <div className="space-y-4">
         <div className="flex items-start p-4 bg-gray-50 rounded-md border">
@@ -44,24 +44,24 @@ const IntegrationsSettings = ({ companyProfile, memberProfile }) => {
           </div>
           <div className="ml-4 flex-grow">
             <h3 className="text-lg font-bold text-gray-900">
-              {t("integrations.stripeConnectTitle")}
+              {t("settings.integrations.stripeConnectTitle")}
             </h3>
             <p className="text-sm text-gray-600 mt-1">
-              {t("integrations.stripeConnectDesc")}
+              {t("settings.integrations.stripeConnectDesc")}
             </p>
           </div>
           <div className="flex-shrink-0 ml-4">
             {isConnected ? (
               <div className="text-center">
                 <p className="text-sm font-bold text-green-700">
-                  {t("integrations.stripeConnected")}
+                  {t("settings.integrations.stripeConnected")}
                 </p>
                 {isOwner && (
                   <button
                     onClick={handleDisconnectStripe}
                     className="text-xs text-red-600 hover:underline"
                   >
-                    {t("integrations.stripeDisconnect")}
+                    {t("settings.integrations.stripeDisconnect")}
                   </button>
                 )}
               </div>
@@ -73,14 +73,14 @@ const IntegrationsSettings = ({ companyProfile, memberProfile }) => {
               >
                 {isLoading
                   ? "Connecting..."
-                  : t("integrations.stripeConnectButton")}
+                  : t("settings.integrations.stripeConnectButton")}
               </button>
             )}
           </div>
         </div>
         {!isOwner && !isConnected && (
           <p className="text-sm text-gray-500">
-            {t("subscriptionInfo.ownerOnlyNotice")}
+            {t("settings.subscriptionInfo.ownerOnlyNotice")}
           </p>
         )}
       </div>

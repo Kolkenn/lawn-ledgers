@@ -58,7 +58,10 @@ const PersonalSettings = ({ user, companyProfile }) => {
     e.preventDefault();
     setStatusMessage({ text: "", type: "" });
     if (displayName.trim() === "") {
-      setStatusMessage({ text: t("personalInfo.status.empty"), type: "error" });
+      setStatusMessage({
+        text: t("settings.personalInfo.status.empty"),
+        type: "error",
+      });
       return;
     }
     setIsSaving(true);
@@ -90,12 +93,12 @@ const PersonalSettings = ({ user, companyProfile }) => {
       await batch.commit();
 
       setStatusMessage({
-        text: t("personalInfo.status.success"),
+        text: t("settings.personalInfo.status.success"),
         type: "success",
       });
       console.log("Profile updated successfully across all memberships.");
     } catch (err) {
-      setStatusMessage(t("personalInfo.status.error"));
+      setStatusMessage(t("settings.personalInfo.status.error"));
       console.error("Error updating profile:", err);
     } finally {
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate a short delay for UX
@@ -112,7 +115,7 @@ const PersonalSettings = ({ user, companyProfile }) => {
     <div className="bg-white p-6 rounded-lg shadow-xl">
       {/* Title */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        {t("personalInfo.title")}
+        {t("settings.personalInfo.title")}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name Label */}
@@ -121,7 +124,7 @@ const PersonalSettings = ({ user, companyProfile }) => {
             htmlFor="displayName"
             className="block text-sm font-medium text-gray-700"
           >
-            {t("personalInfo.nameLabel")}
+            {t("settings.personalInfo.nameLabel")}
           </label>
           <input
             type="text"
@@ -138,7 +141,7 @@ const PersonalSettings = ({ user, companyProfile }) => {
             htmlFor="email"
             className="block text-sm font-medium text-gray-700"
           >
-            {t("personalInfo.emailLabel")}
+            {t("settings.personalInfo.emailLabel")}
           </label>
           <input
             type="email"
@@ -151,7 +154,7 @@ const PersonalSettings = ({ user, companyProfile }) => {
         {/* SSO Notice */}
         {!authProviderConfig.isEditable && (
           <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-md border border-blue-200">
-            {t("personalInfo.ssoNotice", {
+            {t("settings.personalInfo.ssoNotice", {
               provider: authProviderConfig.providerName,
             })}
           </p>
@@ -177,8 +180,8 @@ const PersonalSettings = ({ user, companyProfile }) => {
             >
               <Save className="w-5 h-5 mr-2" />
               {isSaving
-                ? t("personalInfo.savingChanges")
-                : t("personalInfo.saveChanges")}
+                ? t("settings.personalInfo.savingChanges")
+                : t("settings.personalInfo.saveChanges")}
             </button>
           </div>
         )}

@@ -82,14 +82,14 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
     // Perform client-side checks
     if (file.size > MAX_FILE_SIZE) {
       setUploadMessage({
-        text: t("companyInfo.logoValidation.fileTooLarge"),
+        text: t("settings.companyInfo.logoValidation.fileTooLarge"),
         type: "error",
       });
       return;
     }
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       setUploadMessage({
-        text: t("companyInfo.logoValidation.invalidFileType"),
+        text: t("settings.companyInfo.logoValidation.invalidFileType"),
         type: "error",
       });
       return;
@@ -97,7 +97,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
 
     setIsUploading(true);
     try {
-      const fileExtension = file.name.split(".").pop();
+      const fileExtension = file.name.split("settings..").pop();
       const storageRef = ref(
         storage,
         `${companyId}/logo/logo.${fileExtension}`
@@ -109,13 +109,13 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
       await updateDoc(doc(db, "companies", companyId), { logoUrl: logoUrl });
       setLogoPreview(logoUrl);
       setUploadMessage({
-        text: t("companyInfo.logoStatus.success"),
+        text: t("settings.companyInfo.logoStatus.success"),
         type: "success",
       });
       await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (error) {
       setUploadMessage({
-        text: t("companyInfo.logoStatus.error"),
+        text: t("settings.companyInfo.logoStatus.error"),
         type: "error",
       });
       console.error("Error uploading logo:", error);
@@ -145,7 +145,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
       // Update the company document with the new form state
       await updateDoc(doc(db, "companies", companyId), dataToUpdate);
       setStatusMessage({
-        text: t("companyInfo.infoStatus.success"),
+        text: t("settings.companyInfo.infoStatus.success"),
         type: "success",
       });
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -153,7 +153,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
       setOriginalFormState(dataToUpdate);
     } catch (error) {
       setStatusMessage({
-        text: t("companyInfo.infoStatus.error"),
+        text: t("settings.companyInfo.infoStatus.error"),
         type: "error",
       });
       console.error("Error updating profile:", error);
@@ -179,13 +179,13 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
     <div className="bg-white p-6 rounded-lg shadow-xl">
       {/* Title Section */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        {t("companyInfo.title")}
+        {t("settings.companyInfo.title")}
       </h2>
       {/* Company Logo Container */}
       <div>
         {/* Logo Label */}
         <label className="block text-sm font-medium text-gray-700">
-          {t("companyInfo.logoLabel")}
+          {t("settings.companyInfo.logoLabel")}
         </label>
         {/* Logo Container */}
         <div className="mt-1 flex items-center space-x-6">
@@ -211,8 +211,8 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
             >
               <UploadCloud className="inline-block w-5 h-5 mr-2" />
               {isUploading
-                ? t("companyInfo.uploadingLogo")
-                : t("companyInfo.changeLogo")}
+                ? t("settings.companyInfo.uploadingLogo")
+                : t("settings.companyInfo.changeLogo")}
             </label>
             <input
               id="logoUpload"
@@ -240,7 +240,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
         </div>
         {/* Helper Text */}
         <p className="text-xs text-gray-500 mb-2 border-b pb-2 mt-2">
-          {t("companyInfo.logoHelper")}
+          {t("settings.companyInfo.logoHelper")}
         </p>
       </div>
       {/* Company Info Container */}
@@ -253,7 +253,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t("companyInfo.nameLabel")}
+                {t("settings.companyInfo.nameLabel")}
               </label>
               <input
                 type="text"
@@ -261,7 +261,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 value={formState.name}
                 onChange={handleInputChange}
                 className={inputClasses}
-                disabled={!isOwner}
+                disabled // Company name is never editable here
               />
             </div>
             {/* Company Address Section */}
@@ -270,7 +270,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 htmlFor="address"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t("companyInfo.addressLabel")}
+                {t("settings.companyInfo.addressLabel")}
               </label>
               <input
                 type="text"
@@ -287,7 +287,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 htmlFor="city"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t("companyInfo.cityLabel")}
+                {t("settings.companyInfo.cityLabel")}
               </label>
               <input
                 type="text"
@@ -304,7 +304,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 htmlFor="state"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t("companyInfo.stateLabel")}
+                {t("settings.companyInfo.stateLabel")}
               </label>
               <input
                 type="text"
@@ -321,7 +321,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 htmlFor="zip"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t("companyInfo.zipLabel")}
+                {t("settings.companyInfo.zipLabel")}
               </label>
               <input
                 type="text"
@@ -365,8 +365,8 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 >
                   <Save className="w-5 h-5 mr-2" />
                   {isSaving
-                    ? t("companyInfo.savingChanges")
-                    : t("companyInfo.saveChanges")}
+                    ? t("settings.companyInfo.savingChanges")
+                    : t("settings.companyInfo.saveChanges")}
                 </button>
               </div>
             )}
