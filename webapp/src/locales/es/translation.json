@@ -58,16 +58,23 @@
   },
   "companyInfo": {
     "title": "Información de la Compañía",
+    "logoLabel": "Logo de la Compañía",
+    "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
+    "changeLogo": "Cambiar Logo",
+    "uploadingLogo": "Subiendo logo...",
+    "logoValidation": {
+      "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo es de 2MB.",
+      "invalidFileType": "Tipo de archivo no válido. Por favor, use PNG o JPG."
+    },
+    "logoStatus": {
+      "success": "¡Logo actualizado! Refresca la página para ver los cambios.",
+      "error": "Error al subir el logo. Por favor, inténtalo de nuevo."
+    },
     "nameLabel": "Nombre de la Compañía",
     "addressLabel": "Dirección",
     "cityLabel": "Ciudad",
     "stateLabel": "Estado",
     "zipLabel": "Código Postal",
-    "logoLabel": "Logo de la Compañía",
-    "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
-    "changeLogo": "Cambiar Logo",
-    "uploadingLogo": "Subiendo logo...",
-    "logoUploaded": "Logo listo para guardar.",
     "saveChanges": "Guardar Cambios",
     "savingChanges": "Guardando...",
     "status": {
