@@ -114,7 +114,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-emerald-900 p-4">
+    <div className="min-h-screen bg-emerald-900 p-4 flex items-center justify-center">
       {/* Language Selector */}
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
