@@ -29,12 +29,12 @@
       "emailLabel": "Adresse e-mail",
       "sendButton": "Envoyer le lien de réinitialisation",
       "backToLogin": "Retour à la connexion"
-    }
+    },
+    "oneLastStep": "Une Dernière Étape",
+    "finishSetup": "Veuillez saisir le nom de votre entreprise pour finaliser la configuration de votre compte.",
+    "companyNameLabel": "Nom de l'entreprise",
+    "continue": "Continuer"
   },
-  "companyNameLabel": "Nom de l'entreprise",
-  "oneLastStep": "Une Dernière Étape",
-  "finishSetup": "Veuillez saisir le nom de votre entreprise pour finaliser la configuration de votre compte.",
-  "continue": "Continuer",
   "pageTitles": {
     "dashboard": "Tableau de Bord",
     "settings": "Paramètres"

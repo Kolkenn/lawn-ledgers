@@ -29,13 +29,12 @@
       "emailLabel": "Email Address",
       "sendButton": "Send Reset Link",
       "backToLogin": "Back to Login"
-    }
+    },
+    "oneLastStep": "One Last Step",
+    "finishSetup": "Please enter your company name to finish setting up your account.",
+    "companyNameLabel": "Company Name",
+    "continue": "Continue"
   },
-  "companyNameLabel": "Company Name",
-  "oneLastStep": "One Last Step",
-  "finishSetup": "Please enter your company name to finish setting up your account.",
-  "continue": "Continue",
-
   "pageTitles": {
     "dashboard": "Dashboard",
     "settings": "Settings"

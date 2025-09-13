@@ -29,12 +29,12 @@
       "emailLabel": "Dirección de Correo Electrónico",
       "sendButton": "Enviar Enlace de Restablecimiento",
       "backToLogin": "Volver a Iniciar Sesión"
-    }
+    },
+    "oneLastStep": "Un Último Paso",
+    "finishSetup": "Por favor, introduce el nombre de tu empresa para finalizar la configuración de tu cuenta.",
+    "companyNameLabel": "Nombre de la Empresa",
+    "continue": "Continuar"
   },
-  "companyNameLabel": "Nombre de la Empresa",
-  "oneLastStep": "Un Último Paso",
-  "finishSetup": "Por favor, introduce el nombre de tu empresa para finalizar la configuración de tu cuenta.",
-  "continue": "Continuar",
   "pageTitles": {
     "dashboard": "Panel",
     "settings": "Configuración"

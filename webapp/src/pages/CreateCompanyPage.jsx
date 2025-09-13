@@ -124,6 +124,7 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
           onClick={handleLogout}
           className="cursor-pointer w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
           aria-label={t("logOut")}
+          title={t("logOut")}
         >
           <LogOut />
         </button>
@@ -131,9 +132,11 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
       {/* Main Component */}
       <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          {t("oneLastStep")}
+          {t("auth.oneLastStep")}
         </h1>
-        <p className="text-center text-gray-600 mb-6">{t("finishSetup")}</p>
+        <p className="text-center text-gray-600 mb-6">
+          {t("auth.finishSetup")}
+        </p>
         <form onSubmit={handleSubmit} noValidate>
           {/* This FormField component needs to be defined or imported */}
           <div className="mb-4">
@@ -141,7 +144,7 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
               className="block text-gray-700 font-bold mb-2"
               htmlFor="companyName"
             >
-              {t("companyNameLabel")}
+              {t("auth.companyNameLabel")}
             </label>
             <input
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
@@ -160,7 +163,7 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
             className="cursor-pointer w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors mt-2"
             type="submit"
           >
-            {t("continue")}
+            {t("auth.continue")}
           </button>
         </form>
       </div>
