@@ -171,7 +171,6 @@ function App() {
               user={user}
               companyProfile={activeCompany}
               memberProfile={{ role: activeRole }}
-              onProfileUpdate={handleProfileCreatedOrUpdated}
             />
           }
         />
