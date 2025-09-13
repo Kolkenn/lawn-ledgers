@@ -116,7 +116,7 @@ const CreateCompanyPage = ({ onProfileCreated }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+    <div className="min-h-screen bg-emerald-900 flex items-center justify-center">
       {/* Top Right Action Buttons */}
       <div className="flex items-center space-x-2 absolute top-4 right-4">
         <LanguageSwitcher />
