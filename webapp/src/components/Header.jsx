@@ -5,7 +5,7 @@ import { LogOut } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { handleLogout } from "../firebase/authService";
 
-const Header = ({ user, companyProfile }) => {
+const Header = ({ companyProfile }) => {
   const { t } = useTranslation();
   const location = useLocation();
 
