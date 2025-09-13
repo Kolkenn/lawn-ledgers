@@ -71,7 +71,7 @@ const LanguageSwitcher = () => {
             {/* French */}
             <li>
               <button
-                onClick={() => changeLanguage("es")}
+                onClick={() => changeLanguage("fr")}
                 className={`cursor-pointer w-full text-left px-4 py-2 text-sm ${
                   i18n.language.startsWith("fr")
                     ? "bg-blue-100 text-blue-700"

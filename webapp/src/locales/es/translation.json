@@ -1,35 +1,42 @@
 {
   "language": "Cambiar Idioma",
-  "welcomeBack": "Bienvenido de Nuevo",
-  "signInWith": "Iniciar sesión con",
-  "signInWithGoogle": "Iniciar sesión con Google",
-  "orContinueWithEmail": "o continuar con correo electrónico",
-  "emailLabel": "Correo Electrónico",
-  "passwordLabel": "Contraseña",
-  "logIn": "Iniciar Sesión",
-  "needAccount": "¿Necesitas una cuenta? Regístrate",
-  "createAccount": "Crea Tu Cuenta",
-  "signUpWith": "Regístrate con",
-  "signUpWithGoogle": "Regístrate con Google",
-  "companyNameLabel": "Nombre de la Compañía",
-  "confirmPasswordLabel": "Confirmar Contraseña",
-  "signUp": "Regístrate",
-  "haveAccount": "¿Ya tienes una cuenta? Inicia Sesión",
-  "oneLastStep": "Un Último Paso",
-  "finishSetup": "Por favor, ingresa el nombre de tu compañía para terminar la configuración de tu cuenta.",
-  "continue": "Continuar",
-  "welcomeTo": "Bienvenido a {{companyName}}",
-  "yourDashboard": "Tu Panel de Control",
   "logOut": "Cerrar Sesión",
-  "passwordRequirements": {
-    "length": "Al menos 8 caracteres",
-    "uppercase": "Contiene una letra mayúscula",
-    "lowercase": "Contiene una letra minúscula",
-    "number": "Contiene un número",
-    "special": "Contiene un carácter especial"
+  "auth": {
+    "loginTitle": "Bienvenido de Nuevo",
+    "registerTitle": "Crea Tu Cuenta",
+    "signInWith": "Iniciar sesión con",
+    "signUpWith": "Registrarse con",
+    "ssoButton": "SSO de {{provider}}",
+    "orContinueWithEmail": "o continuar con email",
+    "nameLabel": "Nombre Completo",
+    "emailLabel": "Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "confirmPasswordLabel": "Confirmar Contraseña",
+    "passwordRequirements": {
+      "length": "Al menos 8 caracteres",
+      "uppercase": "Contiene una letra mayúscula",
+      "lowercase": "Contiene una letra minúscula",
+      "number": "Contiene un número",
+      "special": "Contiene un carácter especial"
+    },
+    "logInButton": "Iniciar Sesión",
+    "signUpButton": "Registrarse",
+    "signUpRedirect": "¿Necesitas una cuenta? Regístrate",
+    "logInRedirect": "¿Ya tienes una cuenta? Inicia Sesión",
+    "resetRedirect": "Función de Restablecimiento - ¡Próximamente!",
+    "passwordReset": {
+      "title": "Restablecer Tu Contraseña",
+      "emailLabel": "Dirección de Correo Electrónico",
+      "sendButton": "Enviar Enlace de Restablecimiento",
+      "backToLogin": "Volver a Iniciar Sesión"
+    }
   },
+  "companyNameLabel": "Nombre de la Empresa",
+  "oneLastStep": "Un Último Paso",
+  "finishSetup": "Por favor, introduce el nombre de tu empresa para finalizar la configuración de tu cuenta.",
+  "continue": "Continuar",
   "pageTitles": {
-    "dashboard": "Panel de Control",
+    "dashboard": "Panel",
     "settings": "Configuración"
   },
   "expandSidebar": "Expandir barra lateral",
@@ -38,76 +45,78 @@
     "upcomingJobs": "Próximos Trabajos",
     "pendingInvoices": "Facturas Pendientes",
     "totalPending": "Total Pendiente",
-    "invoiceDue": "Vence:"
-  },
-  "jobStatuses": {
-    "scheduled": "Programado",
-    "inProgress": "En Progreso"
-  },
-  "personalInfo": {
-    "title": "Información Personal",
-    "nameLabel": "Nombre Completo",
-    "emailLabel": "Dirección de Correo Electrónico",
-    "ssoNotice": "Tu nombre es gestionado por {{provider}}. Los cambios deben hacerse a través de ellos.",
-    "saveChanges": "Guardar Cambios",
-    "savingChanges": "Guardando...",
-    "status": {
-      "empty": "Nombre no puede estar vacío.",
-      "success": "¡Nombre actualizado!",
-      "error": "Error al actualizar el nombre. Por favor, inténtalo de nuevo."
+    "invoiceDue": "Vence:",
+    "jobStatuses": {
+      "scheduled": "Programado",
+      "inProgress": "En Progreso"
     }
   },
-  "companyInfo": {
-    "title": "Información de la Compañía",
-    "logoLabel": "Logo de la Compañía",
-    "logoHelper": "PNG, JPG hasta 2MB. Tamaño recomendado: 400x200px.",
-    "changeLogo": "Cambiar Logo",
-    "uploadingLogo": "Subiendo logo...",
-    "logoValidation": {
-      "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo es de 2MB.",
-      "invalidFileType": "Tipo de archivo no válido. Por favor, use PNG o JPG."
+  "settings": {
+    "personalInfo": {
+      "title": "Información Personal",
+      "nameLabel": "Nombre Completo",
+      "emailLabel": "Dirección de Correo Electrónico",
+      "ssoNotice": "Tu nombre y correo electrónico son gestionados por {{provider}}. Los cambios deben realizarse a través de ellos.",
+      "saveChanges": "Guardar Cambios",
+      "savingChanges": "Guardando...",
+      "status": {
+        "empty": "El nombre no puede estar vacío.",
+        "success": "¡Nombre actualizado correctamente!",
+        "error": "Error al actualizar el nombre. Por favor, inténtalo de nuevo."
+      }
     },
-    "logoStatus": {
-      "success": "¡Logo actualizado! Refresca la página para ver los cambios.",
-      "error": "Error al subir el logo. Por favor, inténtalo de nuevo."
+    "companyInfo": {
+      "title": "Información de la Empresa",
+      "logoLabel": "Logo de la Empresa",
+      "logoHelper": "PNG, JPG de hasta 2MB. Tamaño recomendado: 400x200px.",
+      "changeLogo": "Cambiar Logo",
+      "uploadingLogo": "Subiendo logo...",
+      "logoValidation": {
+        "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo es 2MB.",
+        "invalidFileType": "Tipo de archivo no válido. Por favor, usa PNG o JPG."
+      },
+      "logoStatus": {
+        "success": "¡Logo actualizado! Refresca la página para ver los cambios en todas partes.",
+        "error": "Error al subir el logo. Por favor, inténtalo de nuevo."
+      },
+      "nameLabel": "Nombre de la Empresa",
+      "addressLabel": "Dirección",
+      "cityLabel": "Ciudad",
+      "stateLabel": "Estado / Provincia",
+      "zipLabel": "Código Postal",
+      "saveChanges": "Guardar Cambios",
+      "savingChanges": "Guardando...",
+      "infoStatus": {
+        "success": "¡Información actualizada correctamente!",
+        "error": "Error al actualizar la información. Por favor, inténtalo de nuevo."
+      }
     },
-    "nameLabel": "Nombre de la Compañía",
-    "addressLabel": "Dirección",
-    "cityLabel": "Ciudad",
-    "stateLabel": "Estado",
-    "zipLabel": "Código Postal",
-    "saveChanges": "Guardar Cambios",
-    "savingChanges": "Guardando...",
-    "status": {
-      "success": "¡Información actualizada!",
-      "error": "Error al actualizar la información."
+    "subscriptionInfo": {
+      "title": "Suscripción y Facturación",
+      "currentPlan": "Plan Actual",
+      "manageButton": "Gestionar Suscripción",
+      "ownerOnlyNotice": "Solo el propietario de la empresa puede gestionar la facturación."
+    },
+    "integrations": {
+      "title": "Integraciones",
+      "stripeConnectTitle": "Procesamiento de Pagos con Stripe",
+      "stripeConnectDesc": "Conecta tu cuenta de Stripe para aceptar pagos en línea de clientes directamente en sus facturas.",
+      "stripeConnectButton": "Conectar Stripe",
+      "stripeConnected": "Cuenta de Stripe Conectada",
+      "stripeDisconnect": "Desconectar"
+    },
+    "teamManagement": {
+      "title": "Gestión de Equipo",
+      "inviteTitle": "Invitar a un Nuevo Miembro del Equipo",
+      "emailLabel": "Dirección de Correo Electrónico",
+      "roleLabel": "Rol",
+      "roleOwner": "Propietario",
+      "roleCrew": "Miembro",
+      "sendInvite": "Enviar Invitación",
+      "currentMembers": "Miembros Actuales",
+      "pendingInvites": "Invitaciones Pendientes",
+      "inviteSent": "¡Invitación enviada correctamente!",
+      "alreadyMember": "Este usuario ya es miembro de esta empresa."
     }
-  },
-  "subscriptionInfo": {
-    "title": "Suscripción y Facturación",
-    "currentPlan": "Plan Actual",
-    "manageButton": "Gestionar Suscripción",
-    "ownerOnlyNotice": "Solo el propietario de la compañía puede gestionar la facturación."
-  },
-  "integrations": {
-    "title": "Integraciones",
-    "stripeConnectTitle": "Procesamiento de Pagos con Stripe",
-    "stripeConnectDesc": "Conecta tu cuenta de Stripe para aceptar pagos en línea de tus clientes directamente en sus facturas.",
-    "stripeConnectButton": "Conectar Stripe",
-    "stripeConnected": "Cuenta de Stripe Conectada",
-    "stripeDisconnect": "Desconectar"
-  },
-  "teamManagement": {
-    "title": "Gestión de Equipo",
-    "inviteTitle": "Invitar a un Nuevo Miembro del Equipo",
-    "emailLabel": "Dirección de Correo Electrónico",
-    "roleLabel": "Rol",
-    "roleOwner": "Propietario",
-    "roleCrew": "Equipo",
-    "sendInvite": "Enviar Invitación",
-    "currentMembers": "Miembros Actuales",
-    "pendingInvites": "Invitaciones Pendientes",
-    "inviteSent": "¡Invitación enviada con éxito!",
-    "alreadyMember": "Este usuario ya es miembro de esta compañía."
   }
 }

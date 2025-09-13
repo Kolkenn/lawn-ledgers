@@ -124,11 +124,11 @@ const RegisterPage = () => {
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
           {/* Title */}
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            {t("createAccount")}
+            {t("auth.registerTitle")}
           </h1>
           <div className="my-4">
             <p className="text-center text-sm text-gray-500 mb-2">
-              {t("signUpWith")}
+              {t("auth.signUpWith")}
             </p>
             {/* SSO Buttons */}
             <div className="flex justify-center space-x-4">
@@ -137,7 +137,8 @@ const RegisterPage = () => {
                 onClick={handleGoogleSignIn}
                 type="button"
                 className="cursor-pointer w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-500 transition-colors"
-                aria-label={t("signUpWithGoogle")}
+                aria-label={t("auth.ssoButton", { provider: "Google" })}
+                title={t("auth.ssoButton", { provider: "Google" })}
               >
                 <GoogleIcon />
               </button>
@@ -148,7 +149,7 @@ const RegisterPage = () => {
           <div className="my-4 flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="flex-shrink mx-4 text-gray-400">
-              {t("orContinueWithEmail")}
+              {t("auth.orContinueWithEmail")}
             </span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
@@ -157,7 +158,7 @@ const RegisterPage = () => {
             {/* Name Field */}
             <FormField
               id="fullName"
-              label={t("personalInfo.nameLabel")}
+              label={t("auth.nameLabel")}
               type="text"
               placeholder="e.g., Jane Doe"
               value={fullName}
@@ -166,7 +167,7 @@ const RegisterPage = () => {
             {/* Email Field */}
             <FormField
               id="email"
-              label={t("emailLabel")}
+              label={t("auth.emailLabel")}
               type="email"
               placeholder="you@example.com"
               value={email}
@@ -179,7 +180,7 @@ const RegisterPage = () => {
                 className="block text-gray-700 font-bold mb-1"
                 htmlFor="password"
               >
-                {t("passwordLabel")}
+                {t("auth.passwordLabel")}
               </label>
               <input
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -198,7 +199,7 @@ const RegisterPage = () => {
             {/* Confirm Password Field */}
             <FormField
               id="confirmPassword"
-              label={t("confirmPasswordLabel")}
+              label={t("auth.confirmPasswordLabel")}
               type="password"
               placeholder="••••••••"
               value={confirmPassword}
@@ -214,7 +215,7 @@ const RegisterPage = () => {
               className="cursor-pointer w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
               type="submit"
             >
-              {t("signUp")}
+              {t("auth.signUpButton")}
             </button>
             {/* Display general error messages */}
             {error && (
@@ -224,14 +225,8 @@ const RegisterPage = () => {
           {/* Link to Login Page */}
           <div className="text-center mt-4">
             <Link to="/login" className="text-blue-600 hover:underline">
-              {t("haveAccount")}
+              {t("auth.logInRedirect")}
             </Link>
-          </div>
-          {/* Future Password Reset */}
-          <div className="text-center mt-4">
-            <p className="text-green-500 text-sm mb-4 text-center">
-              Reset Password feature coming soon!
-            </p>
           </div>
         </div>
       </div>

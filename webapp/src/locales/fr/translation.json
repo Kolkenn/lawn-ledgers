@@ -1,0 +1,122 @@
+{
+  "language": "Changer de Langue",
+  "logOut": "Déconnexion",
+  "auth": {
+    "loginTitle": "Content de vous revoir",
+    "registerTitle": "Créez Votre Compte",
+    "signInWith": "Se connecter avec",
+    "signUpWith": "S'inscrire avec",
+    "ssoButton": "SSO {{provider}}",
+    "orContinueWithEmail": "ou continuer avec l'e-mail",
+    "nameLabel": "Nom Complet",
+    "emailLabel": "Adresse e-mail",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "passwordRequirements": {
+      "length": "Au moins 8 caractères",
+      "uppercase": "Contient une lettre majuscule",
+      "lowercase": "Contient une lettre minuscule",
+      "number": "Contient un chiffre",
+      "special": "Contient un caractère spécial"
+    },
+    "logInButton": "Se Connecter",
+    "signUpButton": "S'inscrire",
+    "signUpRedirect": "Besoin d'un compte ? S'inscrire",
+    "logInRedirect": "Vous avez déjà un compte ? Se connecter",
+    "resetRedirect": "Fonction de Réinitialisation - Bientôt disponible !",
+    "passwordReset": {
+      "title": "Réinitialiser Votre Mot de Passe",
+      "emailLabel": "Adresse e-mail",
+      "sendButton": "Envoyer le lien de réinitialisation",
+      "backToLogin": "Retour à la connexion"
+    }
+  },
+  "companyNameLabel": "Nom de l'entreprise",
+  "oneLastStep": "Une Dernière Étape",
+  "finishSetup": "Veuillez saisir le nom de votre entreprise pour finaliser la configuration de votre compte.",
+  "continue": "Continuer",
+  "pageTitles": {
+    "dashboard": "Tableau de Bord",
+    "settings": "Paramètres"
+  },
+  "expandSidebar": "Agrandir la barre latérale",
+  "collapseSidebar": "Réduire la barre latérale",
+  "dashboard": {
+    "upcomingJobs": "Tâches à Venir",
+    "pendingInvoices": "Factures en Attente",
+    "totalPending": "Total en Attente",
+    "invoiceDue": "Échéance :",
+    "jobStatuses": {
+      "scheduled": "Planifié",
+      "inProgress": "En Cours"
+    }
+  },
+  "settings": {
+    "personalInfo": {
+      "title": "Informations Personnelles",
+      "nameLabel": "Nom Complet",
+      "emailLabel": "Adresse e-mail",
+      "ssoNotice": "Votre nom et votre adresse e-mail sont gérés par {{provider}}. Les modifications doivent être effectuées via leur service.",
+      "saveChanges": "Enregistrer les Modifications",
+      "savingChanges": "Enregistrement...",
+      "status": {
+        "empty": "Le nom ne peut pas être vide.",
+        "success": "Nom mis à jour avec succès !",
+        "error": "Erreur lors de la mise à jour du nom. Veuillez réessayer."
+      }
+    },
+    "companyInfo": {
+      "title": "Informations sur l'Entreprise",
+      "logoLabel": "Logo de l'Entreprise",
+      "logoHelper": "PNG, JPG jusqu'à 2 Mo. Taille recommandée : 400x200px.",
+      "changeLogo": "Changer de Logo",
+      "uploadingLogo": "Téléchargement du logo...",
+      "logoValidation": {
+        "fileTooLarge": "Le fichier est trop volumineux. La taille maximale est de 2 Mo.",
+        "invalidFileType": "Type de fichier non valide. Veuillez utiliser PNG ou JPG."
+      },
+      "logoStatus": {
+        "success": "Logo mis à jour ! Actualisez la page pour voir les changements partout.",
+        "error": "Erreur lors du téléchargement du logo. Veuillez réessayer."
+      },
+      "nameLabel": "Nom de l'Entreprise",
+      "addressLabel": "Adresse",
+      "cityLabel": "Ville",
+      "stateLabel": "État / Province",
+      "zipLabel": "Code Postal",
+      "saveChanges": "Enregistrer les Modifications",
+      "savingChanges": "Enregistrement...",
+      "infoStatus": {
+        "success": "Informations mises à jour avec succès !",
+        "error": "Erreur lors de la mise à jour des informations. Veuillez réessayer."
+      }
+    },
+    "subscriptionInfo": {
+      "title": "Abonnement et Facturation",
+      "currentPlan": "Forfait Actuel",
+      "manageButton": "Gérer l'Abonnement",
+      "ownerOnlyNotice": "Seul le propriétaire de l'entreprise peut gérer la facturation."
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "stripeConnectTitle": "Traitement des Paiements Stripe",
+      "stripeConnectDesc": "Connectez votre compte Stripe pour accepter les paiements en ligne de vos clients directement sur leurs factures.",
+      "stripeConnectButton": "Connecter Stripe",
+      "stripeConnected": "Compte Stripe Connecté",
+      "stripeDisconnect": "Déconnecter"
+    },
+    "teamManagement": {
+      "title": "Gestion de l'Équipe",
+      "inviteTitle": "Inviter un Nouveau Membre",
+      "emailLabel": "Adresse e-mail",
+      "roleLabel": "Rôle",
+      "roleOwner": "Propriétaire",
+      "roleCrew": "Membre",
+      "sendInvite": "Envoyer l'Invitation",
+      "currentMembers": "Membres Actuels",
+      "pendingInvites": "Invitations en Attente",
+      "inviteSent": "Invitation envoyée avec succès !",
+      "alreadyMember": "Cet utilisateur est déjà membre de cette entreprise."
+    }
+  }
+}

@@ -1,33 +1,41 @@
 {
   "language": "Change Language",
-  "welcomeBack": "Welcome Back",
-  "signInWith": "Sign in with",
-  "signInWithGoogle": "Sign in with Google",
-  "orContinueWithEmail": "or continue with email",
-  "emailLabel": "Email",
-  "passwordLabel": "Password",
-  "logIn": "Log In",
-  "needAccount": "Need an account? Sign Up",
-  "createAccount": "Create Your Account",
-  "signUpWith": "Sign up with",
-  "signUpWithGoogle": "Sign up with Google",
+  "logOut": "Log Out",
+  "auth": {
+    "loginTitle": "Welcome Back",
+    "registerTitle": "Create Your Account",
+    "signInWith": "Sign in with",
+    "signUpWith": "Sign up with",
+    "ssoButton": "{{provider}} SSO",
+    "orContinueWithEmail": "or continue with email",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "passwordRequirements": {
+      "length": "At least 8 characters long",
+      "uppercase": "Contains an uppercase letter",
+      "lowercase": "Contains a lowercase letter",
+      "number": "Contains a number",
+      "special": "Contains a special character"
+    },
+    "logInButton": "Log In",
+    "signUpButton": "Sign Up",
+    "signUpRedirect": "Need an account? Sign Up",
+    "logInRedirect": "Already have an account? Log In",
+    "resetRedirect": "Reset Feature - Coming Soon!",
+    "passwordReset": {
+      "title": "Reset Your Password",
+      "emailLabel": "Email Address",
+      "sendButton": "Send Reset Link",
+      "backToLogin": "Back to Login"
+    }
+  },
   "companyNameLabel": "Company Name",
-  "confirmPasswordLabel": "Confirm Password",
-  "signUp": "Sign Up",
-  "haveAccount": "Already have an account? Log In",
   "oneLastStep": "One Last Step",
   "finishSetup": "Please enter your company name to finish setting up your account.",
   "continue": "Continue",
-  "welcomeTo": "Welcome to {{companyName}}",
-  "yourDashboard": "Your Dashboard",
-  "logOut": "Log Out",
-  "passwordRequirements": {
-    "length": "At least 8 characters long",
-    "uppercase": "Contains an uppercase letter",
-    "lowercase": "Contains a lowercase letter",
-    "number": "Contains a number",
-    "special": "Contains a special character"
-  },
+
   "pageTitles": {
     "dashboard": "Dashboard",
     "settings": "Settings"
@@ -38,76 +46,78 @@
     "upcomingJobs": "Upcoming Jobs",
     "pendingInvoices": "Pending Invoices",
     "totalPending": "Total Pending",
-    "invoiceDue": "Due:"
-  },
-  "jobStatuses": {
-    "scheduled": "Scheduled",
-    "inProgress": "In Progress"
-  },
-  "personalInfo": {
-    "title": "Personal Information",
-    "nameLabel": "Full Name",
-    "emailLabel": "Email Address",
-    "ssoNotice": "Your name and email is managed by {{provider}}. Changes must be made through them.",
-    "saveChanges": "Save Changes",
-    "savingChanges": "Saving...",
-    "status": {
-      "empty": "Name cannot be empty.",
-      "success": "Name updated successfully!",
-      "error": "Error updating name. Please try again."
+    "invoiceDue": "Due:",
+    "jobStatuses": {
+      "scheduled": "Scheduled",
+      "inProgress": "In Progress"
     }
   },
-  "companyInfo": {
-    "title": "Company Information",
-    "logoLabel": "Company Logo",
-    "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",
-    "changeLogo": "Change Logo",
-    "uploadingLogo": "Uploading logo...",
-    "logoValidation": {
-      "fileTooLarge": "File is too large. Max size is 2MB.",
-      "invalidFileType": "Invalid file type. Please use PNG or JPG."
+  "settings": {
+    "personalInfo": {
+      "title": "Personal Information",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email Address",
+      "ssoNotice": "Your name and email is managed by {{provider}}. Changes must be made through them.",
+      "saveChanges": "Save Changes",
+      "savingChanges": "Saving...",
+      "status": {
+        "empty": "Name cannot be empty.",
+        "success": "Name updated successfully!",
+        "error": "Error updating name. Please try again."
+      }
     },
-    "logoStatus": {
-      "success": "Logo updated! Refresh the page to see changes everywhere.",
-      "error": "Error uploading logo. Please try again."
+    "companyInfo": {
+      "title": "Company Information",
+      "logoLabel": "Company Logo",
+      "logoHelper": "PNG, JPG up to 2MB. Recommended size: 400x200px.",
+      "changeLogo": "Change Logo",
+      "uploadingLogo": "Uploading logo...",
+      "logoValidation": {
+        "fileTooLarge": "File is too large. Max size is 2MB.",
+        "invalidFileType": "Invalid file type. Please use PNG or JPG."
+      },
+      "logoStatus": {
+        "success": "Logo updated! Refresh the page to see changes everywhere.",
+        "error": "Error uploading logo. Please try again."
+      },
+      "nameLabel": "Company Name",
+      "addressLabel": "Address",
+      "cityLabel": "City",
+      "stateLabel": "State",
+      "zipLabel": "Zip / Postal Code",
+      "saveChanges": "Save Changes",
+      "savingChanges": "Saving...",
+      "infoStatus": {
+        "success": "Info updated successfully!",
+        "error": "Error updating info. Please try again."
+      }
     },
-    "nameLabel": "Company Name",
-    "addressLabel": "Address",
-    "cityLabel": "City",
-    "stateLabel": "State",
-    "zipLabel": "Zip / Postal Code",
-    "saveChanges": "Save Changes",
-    "savingChanges": "Saving...",
-    "infoStatus": {
-      "success": "Info updated successfully!",
-      "error": "Error updating info. Please try again."
+    "subscriptionInfo": {
+      "title": "Subscription & Billing",
+      "currentPlan": "Current Plan",
+      "manageButton": "Manage Subscription",
+      "ownerOnlyNotice": "Only the company owner can manage billing."
+    },
+    "integrations": {
+      "title": "Integrations",
+      "stripeConnectTitle": "Stripe Payment Processing",
+      "stripeConnectDesc": "Connect your Stripe account to accept online payments from clients directly on their invoices.",
+      "stripeConnectButton": "Connect Stripe",
+      "stripeConnected": "Stripe Account Connected",
+      "stripeDisconnect": "Disconnect"
+    },
+    "teamManagement": {
+      "title": "Team Management",
+      "inviteTitle": "Invite a New Team Member",
+      "emailLabel": "Email Address",
+      "roleLabel": "Role",
+      "roleOwner": "Owner",
+      "roleCrew": "Crew",
+      "sendInvite": "Send Invite",
+      "currentMembers": "Current Members",
+      "pendingInvites": "Pending Invitations",
+      "inviteSent": "Invitation sent successfully!",
+      "alreadyMember": "This user is already a member of this company."
     }
-  },
-  "subscriptionInfo": {
-    "title": "Subscription & Billing",
-    "currentPlan": "Current Plan",
-    "manageButton": "Manage Subscription",
-    "ownerOnlyNotice": "Only the company owner can manage billing."
-  },
-  "integrations": {
-    "title": "Integrations",
-    "stripeConnectTitle": "Stripe Payment Processing",
-    "stripeConnectDesc": "Connect your Stripe account to accept online payments from clients directly on their invoices.",
-    "stripeConnectButton": "Connect Stripe",
-    "stripeConnected": "Stripe Account Connected",
-    "stripeDisconnect": "Disconnect"
-  },
-  "teamManagement": {
-    "title": "Team Management",
-    "inviteTitle": "Invite a New Team Member",
-    "emailLabel": "Email Address",
-    "roleLabel": "Role",
-    "roleOwner": "Owner",
-    "roleCrew": "Crew",
-    "sendInvite": "Send Invite",
-    "currentMembers": "Current Members",
-    "pendingInvites": "Pending Invitations",
-    "inviteSent": "Invitation sent successfully!",
-    "alreadyMember": "This user is already a member of this company."
   }
 }

@@ -50,11 +50,11 @@ const LoginPage = () => {
       <div className="flex items-center justify-center w-full h-full">
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            {t("welcomeBack")}
+            {t("auth.loginTitle")}
           </h1>
           <div className="my-4">
             <p className="text-center text-sm text-gray-500 mb-2">
-              {t("signInWith")}
+              {t("auth.signInWith")}
             </p>
             <div className="flex justify-center space-x-4">
               {/* Google Button */}
@@ -62,7 +62,8 @@ const LoginPage = () => {
                 onClick={handleGoogleSignIn}
                 type="button"
                 className="cursor-pointer w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-500 transition-colors"
-                aria-label={t("signInWithGoogle")}
+                aria-label={t("auth.ssoButton", { provider: "Google" })}
+                title={t("auth.ssoButton", { provider: "Google" })}
               >
                 <GoogleIcon />
               </button>
@@ -73,7 +74,7 @@ const LoginPage = () => {
           <div className="my-4 flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="flex-shrink mx-4 text-gray-400">
-              {t("orContinueWithEmail")}
+              {t("auth.orContinueWithEmail")}
             </span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
@@ -81,7 +82,7 @@ const LoginPage = () => {
           <form onSubmit={handleLogin} noValidate>
             <FormField
               id="email"
-              label={t("emailLabel")}
+              label={t("auth.emailLabel")}
               type="email"
               placeholder="you@example.com"
               value={email}
@@ -93,7 +94,7 @@ const LoginPage = () => {
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="password"
               >
-                {t("passwordLabel")}
+                {t("auth.passwordLabel")}
               </label>
               <input
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -111,14 +112,21 @@ const LoginPage = () => {
             <button
               className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
               type="submit"
+              aria-label={t("auth.logInButton")}
             >
-              {t("logIn")}
+              {t("auth.logInButton")}
             </button>
           </form>
           <div className="text-center mt-4">
             <Link to="/register" className="text-blue-600 hover:underline">
-              {t("needAccount")}
+              {t("auth.signUpRedirect")}
             </Link>
+          </div>
+          {/* Future Password Reset */}
+          <div className="text-center mt-4">
+            <p className="text-green-500 text-sm mb-4 text-center">
+              {t("auth.resetRedirect")}
+            </p>
           </div>
         </div>
       </div>
