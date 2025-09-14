@@ -355,8 +355,10 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                   onClick={handleUndoChanges}
                   className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50"
                   aria-label="Undo changes"
+                  title="Undo changes"
                 >
-                  <Undo2 className="w-5 h-5" />
+                  <Undo2 className="w-5 h-5 mr-2" />
+                  Undo
                 </button>
                 <button
                   type="submit"
