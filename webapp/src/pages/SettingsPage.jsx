@@ -21,7 +21,10 @@ const SettingsPage = ({ user, companyProfile, memberProfile }) => {
         {/* Team Management Section */}
         {/* <TeamManagement memberProfile={memberProfile} /> */}
         {/* Subscription Settings Section */}
-        <SubscriptionSettings memberProfile={memberProfile} />
+        <SubscriptionSettings
+          companyProfile={companyProfile}
+          memberProfile={memberProfile}
+        />
         {/* Integrations Settings Section */}
         <IntegrationsSettings
           companyProfile={companyProfile}
