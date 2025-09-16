@@ -1,3 +1,19 @@
-backend/.venv
+# Ignore Python bytecode files
+*.pyc
 __pycache__/
+
+# Ignore logs
+*.log
+
+# Ignore environment variables file
 .env
+
+# Ignore Firebase Admin SDK private key
+serviceAccountKey.json
+
+# Ignore Virtual Environment
+.venv/
+
+# Ignore scripts
+runServer.sh
+runListener.sh
