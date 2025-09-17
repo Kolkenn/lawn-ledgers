@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, firestore
+from datetime import datetime, timezone
 
 # --- Firebase Admin Setup ---
 # Initialize Firebase Admin SDK.
@@ -181,6 +182,11 @@ def _update_firestore_subscription(subscription: stripe.Subscription):
     print(f"Updating Firestore for company: {company_id} from subscription: {subscription.id}")
     try:
         company_ref = db.collection('companies').document(company_id)
+
+        # Get the UNIX timestamp from the Stripe object
+        unix_timestamp = subscription['items']['data'][0]['current_period_end']
+        # Convert the UNIX timestamp to a timezone-aware datetime object
+        period_end_datetime = datetime.fromtimestamp(unix_timestamp, tz=timezone.utc)
         
         # Using robust dictionary-style access for nested data
         subscription_data = {
@@ -188,7 +194,7 @@ def _update_firestore_subscription(subscription: stripe.Subscription):
             'stripeSubscriptionId': subscription.get('id'),
             'status': subscription.get('status'),
             'planId': subscription['items']['data'][0]['price']['lookup_key'],
-            'currentPeriodEnd': subscription['items']['data'][0]['current_period_end'],
+            'currentPeriodEnd': period_end_datetime,
             'cancelAtPeriodEnd': subscription.get('cancel_at_period_end'),
             # You can add more fields here as needed
             'lastUpdated': firestore.SERVER_TIMESTAMP
