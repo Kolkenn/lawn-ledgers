@@ -22,10 +22,8 @@ app = FastAPI() # Initialize FastAPI app
 # Configure CORS (Cross-Origin Resource Sharing)
 # This is necessary to allow your frontend (running on localhost:5173)
 # to communicate with your backend (running on localhost:8000).
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+cors_origins = os.getenv("CORS_ORIGINS", "")
+origins = [origin.strip() for origin in cors_origins.split(",")]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
