@@ -5,7 +5,6 @@ import { CreditCard } from "lucide-react";
 const TIER_PRICE_IDS = {
   starter: "price_1S7caTAMPnQQvgQLQXn5JZhT",
   growth: "price_1S7catAMPnQQvgQLc8tC044Q",
-  pro: "price_1S7cb4AMPnQQvgQLENCcBfLV",
 };
 
 const SubscriptionSettings = ({ companyProfile, memberProfile }) => {
@@ -112,28 +111,23 @@ const SubscriptionSettings = ({ companyProfile, memberProfile }) => {
         </div>
       ) : (
         // --- VIEW FOR NEW/UNSUBSCRIBED USERS ---
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
           <PlanCard
             tier="Starter"
-            price="49"
-            features={["1 Admin Seat", "5 Field Seats", "Core Features"]}
+            price="50"
+            features={["1 Admin Seat", "10 Field Seats", "Core Features"]}
             onSubscribe={() => handleSubscribe(TIER_PRICE_IDS.starter)}
           />
           <PlanCard
             tier="Growth"
-            price="149"
-            features={["5 Admin Seats", "20 Field Seats", "Route Optimization"]}
-            onSubscribe={() => handleSubscribe(TIER_PRICE_IDS.growth)}
-          />
-          <PlanCard
-            tier="Pro"
-            price="299"
+            price="150"
             features={[
-              "15 Admin Seats",
-              "Unlimited Field Seats",
-              "QuickBooks Sync",
+              "Starter",
+              "3 Admin Seats",
+              "30 Field Seats",
+              "Route Optimization",
             ]}
-            onSubscribe={() => handleSubscribe(TIER_PRICE_IDS.pro)}
+            onSubscribe={() => handleSubscribe(TIER_PRICE_IDS.growth)}
           />
         </div>
       )}
