@@ -63,7 +63,7 @@ const LoginPage = () => {
             <button
               onClick={handleGoogleSignIn}
               type="button"
-              className="btn btn-square"
+              className="btn btn-square border-primary"
               aria-label={t("auth.ssoButton", { provider: "Google" })}
               title={t("auth.ssoButton", { provider: "Google" })}
             >
@@ -117,15 +117,12 @@ const LoginPage = () => {
             {t("auth.logInButton")}
           </button>
         </form>
-
-        <div className="grid">
-          {/* Register Button */}
-          <button className="btn btn-secondary mb-2">
-            <Link to="/register">{t("auth.signUpRedirect")}</Link>
-          </button>
-          {/* Reset Button */}
-          <button className="btn btn-outline">{t("auth.resetRedirect")}</button>
-        </div>
+        {/* Register Button */}
+        <button className="btn btn-secondary mt-3">
+          <Link to="/register">{t("auth.signUpRedirect")}</Link>
+        </button>
+        {/* Reset Button */}
+        <button className="btn btn-outline">{t("auth.resetRedirect")}</button>
       </fieldset>
     </div>
   );
