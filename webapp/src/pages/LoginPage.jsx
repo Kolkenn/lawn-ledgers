@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import FormField from "../components/FormField";
 import { GoogleIcon } from "../components/icons/CustomIcons";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import ThemeController from "../components/ThemeController";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -43,93 +44,89 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-emerald-900 p-4 flex items-center justify-center">
-      <div className="absolute top-4 right-4">
+    <div className="bg-base h-screen flex items-center justify-center">
+      {/* Top Right Buttons */}
+      <div className="absolute top-4 right-4 space-x-2">
         <LanguageSwitcher />
+        <ThemeController />
       </div>
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            {t("auth.loginTitle")}
-          </h1>
-          <div className="my-4">
-            <p className="text-center text-sm text-gray-500 mb-2">
-              {t("auth.signInWith")}
-            </p>
-            <div className="flex justify-center space-x-4">
-              {/* Google Button */}
-              <button
-                onClick={handleGoogleSignIn}
-                type="button"
-                className="cursor-pointer w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-500 transition-colors"
-                aria-label={t("auth.ssoButton", { provider: "Google" })}
-                title={t("auth.ssoButton", { provider: "Google" })}
-              >
-                <GoogleIcon />
-              </button>
-              {/* Future social login buttons can be added here */}
-            </div>
-          </div>
-
-          <div className="my-4 flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-gray-400">
-              {t("auth.orContinueWithEmail")}
-            </span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-
-          <form onSubmit={handleLogin} noValidate>
-            <FormField
-              id="email"
-              label={t("auth.emailLabel")}
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              error={!isEmailValid ? "Please enter a valid email format." : ""}
-            />
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 font-bold mb-2"
-                htmlFor="password"
-              >
-                {t("auth.passwordLabel")}
-              </label>
-              <input
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && (
-              <p className="text-center text-red-500 text-sm mb-4">{error}</p>
-            )}
+      {/* Login Fields/Card */}
+      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-sm border p-4">
+        <h1 className="text-xl font-bold text-center mb-4">
+          {t("auth.loginTitle")}
+        </h1>
+        {/* Social Login Buttons */}
+        <div>
+          <p className="text-center text-sm mb-2">{t("auth.signInWith")}</p>
+          <div className="flex justify-center space-x-4">
+            {/* Google Button */}
             <button
-              className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
-              type="submit"
-              aria-label={t("auth.logInButton")}
+              onClick={handleGoogleSignIn}
+              type="button"
+              className="btn btn-square"
+              aria-label={t("auth.ssoButton", { provider: "Google" })}
+              title={t("auth.ssoButton", { provider: "Google" })}
             >
-              {t("auth.logInButton")}
+              <GoogleIcon />
             </button>
-          </form>
-          <div className="text-center mt-4">
-            <Link to="/register" className="text-blue-600 hover:underline">
-              {t("auth.signUpRedirect")}
-            </Link>
-          </div>
-          {/* Future Password Reset */}
-          <div className="text-center mt-4">
-            <p className="text-green-500 text-sm mb-4 text-center">
-              {t("auth.resetRedirect")}
-            </p>
+            {/* Future social login buttons can be added here */}
           </div>
         </div>
-      </div>
+        {/* Seperator */}
+        <div className="my-2 flex items-center">
+          <div className="flex-grow border-t"></div>
+          <span className="flex-shrink mx-4">
+            {t("auth.orContinueWithEmail")}
+          </span>
+          <div className="flex-grow border-t 0"></div>
+        </div>
+        {/* Login Form */}
+        <form onSubmit={handleLogin} noValidate>
+          {/* Email */}
+          <FormField
+            id="email"
+            label={t("auth.emailLabel")}
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={!isEmailValid ? "Please enter a valid email format." : ""}
+          />
+          {/* Password */}
+          <FormField
+            id="password"
+            label={t("auth.passwordLabel")}
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {/* Error */}
+          {error && (
+            <div className="toast">
+              <div className="alert alert-error">
+                <span>{error}</span>
+              </div>
+            </div>
+          )}
+          <button
+            className="btn btn-primary w-full mt-2"
+            type="submit"
+            aria-label={t("auth.logInButton")}
+          >
+            {t("auth.logInButton")}
+          </button>
+        </form>
+
+        <div className="grid">
+          {/* Register Button */}
+          <button className="btn btn-secondary mb-2">
+            <Link to="/register">{t("auth.signUpRedirect")}</Link>
+          </button>
+          {/* Reset Button */}
+          <button className="btn btn-outline">{t("auth.resetRedirect")}</button>
+        </div>
+      </fieldset>
     </div>
   );
 };

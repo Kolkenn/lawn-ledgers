@@ -8,13 +8,13 @@ const FormField = ({
   error,
 }) => {
   // Conditionally apply classes for the red outline if an error exists
-  const inputClasses = `w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-    error ? "border-red-500 ring-red-500" : "border-gray-300"
+  const inputClasses = `w-full px-3 py-2 border rounded-md ${
+    error ? "border-error" : "border-neutral"
   }`;
 
   return (
     <div className="mb-2">
-      <label className="block text-gray-700 font-bold mb-1" htmlFor={id}>
+      <label className="block mb-1" htmlFor={id}>
         {label}
       </label>
       <input
@@ -27,7 +27,7 @@ const FormField = ({
         required
       />
       {/* Display the error message if it exists */}
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-error text-xs mt-1">{error}</p>}
     </div>
   );
 };
