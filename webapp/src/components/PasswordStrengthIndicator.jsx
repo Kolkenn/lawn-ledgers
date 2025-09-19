@@ -6,8 +6,8 @@ const Requirement = ({ met, text }) => {
   // We use a transition on the color and height to make changes smooth
   const baseClasses =
     "flex items-center transition-colors duration-300 ease-in-out";
-  const metClasses = "text-green-600";
-  const unmetClasses = "text-gray-500";
+  const metClasses = "text-success";
+  const unmetClasses = "text-error";
 
   return (
     <li className={`${baseClasses} ${met ? metClasses : unmetClasses}`}>
