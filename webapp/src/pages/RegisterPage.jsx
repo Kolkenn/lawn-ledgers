@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { handleGoogleSignIn, handleEmailSignUp } from "../firebase/authService";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const { t } = useTranslation();
   const [error, setError] = useState("");
+  const [countdown, setCountdown] = useState(5);
 
   const [validation, setValidation] = useState({
     email: { isValid: true, message: "" },
@@ -28,6 +29,34 @@ const RegisterPage = () => {
     },
     confirmPassword: { isValid: true, message: "" },
   });
+
+  // Effect to manage the timer
+  useEffect(() => {
+    let interval;
+
+    // Only start the interval if there is an error
+    if (error) {
+      // Reset countdown to 5 every time a new error is set
+      setCountdown(5);
+
+      interval = setInterval(() => {
+        // Decrement countdown. We use the functional update form
+        // to ensure we always have the latest state.
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000); // 1000ms = 1 second
+    }
+
+    // The cleanup function clears the interval when the component
+    // unmounts or when the 'error' state changes.
+    return () => clearInterval(interval);
+  }, [error]); // This effect runs only when the 'error' state changes
+
+  // Effect to clear the error when countdown finishes
+  useEffect(() => {
+    if (countdown === -1) {
+      setError(null); // Clear the error message
+    }
+  }, [countdown]); // This effect runs whenever the countdown value changes
 
   // --- Real-time Validation using useEffect Hooks ---
   // 1. Validate Email as the user types
@@ -214,9 +243,12 @@ const RegisterPage = () => {
           </button>
           {/* Display general error messages */}
           {error && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>{error}</span>
+            <div className="toast toast-end">
+              <div className="alert alert-error flex justify-between">
+                <span className="text-base">{error}</span>
+                <span className="countdown text-lg">
+                  <span style={{ "--value": countdown }}></span>
+                </span>
               </div>
             </div>
           )}
