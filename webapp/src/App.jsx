@@ -1,22 +1,9 @@
 // src/App.jsx
 import { useState, useEffect, useCallback } from "react";
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { auth, db } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  writeBatch,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 // Import all necessary components and services
 import useIdleTimer from "./hooks/useIdleTimer";
@@ -106,7 +93,7 @@ function App() {
 
   // The main loading spinner for the entire application.
   if (loading) {
-    return <div className="min-h-screen bg-slate-100"></div>;
+    return <span className="loading loading-dots loading-xl"></span>;
   }
 
   const ProtectedRoutes = () => {
