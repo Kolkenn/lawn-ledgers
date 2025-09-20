@@ -10,7 +10,7 @@ const SettingsPage = ({ user, companyProfile, memberProfile }) => {
 
   return (
     <div className="p-4 sm:p-6 md:p-8">
-      <div className="space-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Personal Settings Section */}
         <PersonalSettings user={user} companyProfile={companyProfile} />
         {/* Company Profile Settings Section */}

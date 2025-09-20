@@ -1,4 +1,4 @@
-import { auth, db } from "./config";
+import { auth } from "./config";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -6,7 +6,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-  getAdditionalUserInfo,
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 
 /**
@@ -16,6 +17,7 @@ import {
 export const handleGoogleSignIn = async () => {
   const provider = new GoogleAuthProvider();
   try {
+    await setPersistence(auth, browserSessionPersistence);
     const result = await signInWithPopup(auth, provider);
     return result; // Return the full result for the caller to inspect
   } catch (err) {
@@ -30,6 +32,7 @@ export const handleGoogleSignIn = async () => {
  */
 export const handleEmailSignUp = async (email, password, fullName) => {
   try {
+    await setPersistence(auth, browserSessionPersistence);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -56,6 +59,7 @@ export const handleEmailSignUp = async (email, password, fullName) => {
  */
 export const handleEmailLogin = async (email, password) => {
   try {
+    await setPersistence(auth, browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error("Error during email login:", err);
