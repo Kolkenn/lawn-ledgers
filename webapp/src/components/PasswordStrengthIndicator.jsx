@@ -41,7 +41,7 @@ const PasswordStrengthIndicator = ({ validation, password }) => {
         isVisible ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"
       }`}
     >
-      <div className="mt-2 space-y-1 text-sm">
+      <div className="mt-2 text-xs">
         <Requirement
           met={validation.length}
           text={t("auth.passwordRequirements.length")}

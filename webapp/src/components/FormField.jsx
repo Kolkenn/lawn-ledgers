@@ -8,13 +8,13 @@ const FormField = ({
   error,
 }) => {
   // Conditionally apply classes for the red outline if an error exists
-  const inputClasses = `w-full px-3 py-2 border rounded-md ${
+  const inputClasses = `w-full px-3 py-2 border rounded-md text-base ${
     error ? "border-error" : "border-neutral"
   }`;
 
   return (
     <div className="mb-2">
-      <label className="block mb-1" htmlFor={id}>
+      <label className="block text-base mb-1" htmlFor={id}>
         {label}
       </label>
       <input

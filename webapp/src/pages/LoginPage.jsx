@@ -52,12 +52,12 @@ const LoginPage = () => {
       </div>
       {/* Login Fields/Card */}
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-sm border p-4">
-        <h1 className="text-xl font-bold text-center mb-4">
+        <h1 className="text-2xl font-serif font-bold text-center mb-4">
           {t("auth.loginTitle")}
         </h1>
         {/* Social Login Buttons */}
         <div>
-          <p className="text-center text-sm mb-2">{t("auth.signInWith")}</p>
+          <p className="text-center text-base mb-2">{t("auth.signInWith")}</p>
           <div className="flex justify-center space-x-4">
             {/* Google Button */}
             <button
@@ -75,7 +75,7 @@ const LoginPage = () => {
         {/* Seperator */}
         <div className="my-2 flex items-center">
           <div className="flex-grow border-t"></div>
-          <span className="flex-shrink mx-4">
+          <span className="text-base flex-shrink mx-4">
             {t("auth.orContinueWithEmail")}
           </span>
           <div className="flex-grow border-t 0"></div>
@@ -110,7 +110,7 @@ const LoginPage = () => {
             </div>
           )}
           <button
-            className="btn btn-primary w-full mt-2"
+            className="btn btn-primary text-base w-full mt-2"
             type="submit"
             aria-label={t("auth.logInButton")}
           >
@@ -118,11 +118,13 @@ const LoginPage = () => {
           </button>
         </form>
         {/* Register Button */}
-        <button className="btn btn-secondary mt-3">
+        <button className="btn btn-secondary text-base mt-3">
           <Link to="/register">{t("auth.signUpRedirect")}</Link>
         </button>
         {/* Reset Button */}
-        <button className="btn btn-outline">{t("auth.resetRedirect")}</button>
+        <button className="btn btn-outline text-base">
+          {t("auth.resetRedirect")}
+        </button>
       </fieldset>
     </div>
   );
