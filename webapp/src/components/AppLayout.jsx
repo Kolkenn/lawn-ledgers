@@ -1,96 +1,130 @@
-import { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
+import ThemeController from "../components/ThemeController";
+import { handleLogout } from "../firebase/authService";
 import {
   LayoutDashboard,
   Settings,
-  ChevronLeft,
-  ChevronRight,
+  LogOut,
+  Languages,
+  Menu,
 } from "lucide-react";
 
-import Header from "./Header";
+const AppLayout = () => {
+  const { t, i18n } = useTranslation();
+  const { user, activeCompany } = useAuth();
 
-const AppLayout = ({ user, companyProfile }) => {
-  const { t } = useTranslation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  useEffect(() => {
-    const savedState = localStorage.getItem("sidebarCollapsed");
-    if (savedState === "true") {
-      setIsCollapsed(true);
-    }
-  }, []);
-
-  const toggleSidebar = () => {
-    const newState = !isCollapsed;
-    setIsCollapsed(newState);
-    localStorage.setItem("sidebarCollapsed", newState);
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
   };
 
-  const NavItem = ({ to, icon, children }) => (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `flex items-center px-4 py-2 rounded-lg transition-colors ${
-          isCollapsed ? "justify-center" : ""
-        } ${
-          isActive
-            ? "bg-green-100 text-green-800 font-bold"
-            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-        }`
-      }
-    >
-      <div className="flex-shrink-0">{icon}</div>
-      {!isCollapsed && (
-        <span className="ml-3 whitespace-nowrap overflow-hidden">
-          {children}
-        </span>
-      )}
-    </NavLink>
+  const NavItem = ({ to, icon, children, onClick }) => (
+    <li>
+      <NavLink
+        to={to}
+        onClick={onClick}
+        className={({ isActive }) =>
+          `flex items-center p-3 my-1 rounded-lg transition-colors text-base-content hover:bg-base-200 ${
+            isActive ? "!bg-primary text-primary-content" : ""
+          }`
+        }
+      >
+        {icon}
+        <span className="ml-3 font-medium">{children}</span>
+      </NavLink>
+    </li>
+  );
+
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full bg-base-100 text-base-content">
+      {/* Logo */}
+      <div className="flex items-center justify-center h-15">
+        <h1 className="text-2xl font-bold text-primary">LawnLedgers</h1>
+      </div>
+
+      <div className="divider divider-primary"></div>
+
+      {/* Main Navigation */}
+      <nav className="flex-grow p-2">
+        <ul>
+          <NavItem to="/" icon={<LayoutDashboard size={20} />}>
+            {t("pageTitles.dashboard")}
+          </NavItem>
+          <NavItem to="/settings" icon={<Settings size={20} />}>
+            {t("pageTitles.settings")}
+          </NavItem>
+        </ul>
+      </nav>
+
+      {/* Footer Controls */}
+      <div className="p-4 border-t">
+        {/* Language Switcher */}
+        <LanguageSwitcher />
+        <ThemeController />
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="btn btn-ghost w-full justify-start mt-2"
+        >
+          <LogOut size={20} />
+          <span className="ml-3 font-medium">{t("logOut")}</span>
+        </button>
+      </div>
+
+      {/* User Profile Section */}
+      <div className="p-2 border-t bg-base-200">
+        <div className="flex items-center">
+          <div className="avatar avatar-placeholder">
+            <div className="bg-primary text-neutral-content rounded-full w-10">
+              <span>{user?.displayName?.[0]?.toUpperCase()}</span>
+            </div>
+          </div>
+          <div className="ml-3">
+            <p className="font-semibold text-sm">
+              {user?.displayName || "User"}
+            </p>
+            <p className="text-xs text-base-content/70">{user?.email}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   return (
-    <div className="flex h-screen bg-slate-100">
-      <aside
-        className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out ${
-          isCollapsed ? "w-20" : "w-64"
-        }`}
-      >
-        <div
-          className={`p-4 border-b flex items-center ${
-            isCollapsed ? "justify-center" : "justify-between"
-          }`}
-        >
-          <h1
-            className={`text-2xl font-bold text-green-700 whitespace-nowrap overflow-hidden transition-all duration-300 ${
-              isCollapsed ? "w-0" : "w-auto"
-            }`}
-          >
-            LawnLedgers
-          </h1>
-          <button
-            onClick={toggleSidebar}
-            className="p-1.5 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer"
-            aria-label={isCollapsed ? t("expandSidebar") : t("collapseSidebar")}
-          >
-            {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
-          </button>
-        </div>
-        <nav className="flex-grow p-4 space-y-2">
-          <NavItem to="/" icon={<LayoutDashboard />}>
-            {t("pageTitles.dashboard")}
-          </NavItem>
-          <NavItem to="/settings" icon={<Settings />}>
-            {t("pageTitles.settings")}
-          </NavItem>
-        </nav>
-      </aside>
+    <div className="drawer lg:drawer-open">
+      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header companyProfile={companyProfile} />
-        <main className="flex-1 overflow-y-auto">
+      {/* Main Content */}
+      <div className="drawer-content flex flex-col bg-base-200">
+        {/* Mobile Header */}
+        <header className="lg:hidden navbar bg-base-100 shadow-sm">
+          <div className="flex-none">
+            <label htmlFor="my-drawer-2" className="btn btn-square btn-ghost">
+              <Menu size={24} />
+            </label>
+          </div>
+          <div className="flex-1">
+            <a className="btn btn-ghost normal-case text-xl text-primary">
+              {activeCompany?.name || "Dashboard"}
+            </a>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           <Outlet />
         </main>
+      </div>
+
+      {/* Sidebar */}
+      <div className="drawer-side" style={{ zIndex: 40 }}>
+        <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+        <div className="w-80 h-full">
+          <SidebarContent />
+        </div>
       </div>
     </div>
   );
