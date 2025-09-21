@@ -4,11 +4,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Import components & pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import CreateCompanyFlow from "./pages/CreateCompanyFlow";
 import SettingsPage from "./pages/SettingsPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import CreateCompanyGuard from "./components/CreateCompanyGuard";
+import CreateCompanyFlow from "./pages/company-creation/CreateCompanyFlow";
 import Step1_Name from "./pages/company-creation/Step1_Name";
 import Step2_Address from "./pages/company-creation/Step2_Address";
 import Step3_Subscription from "./pages/company-creation/Step3_Suscription";

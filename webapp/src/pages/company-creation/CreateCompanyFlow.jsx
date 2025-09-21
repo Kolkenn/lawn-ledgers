@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { handleLogout } from "../firebase/authService";
+import { handleLogout } from "../../firebase/authService";
 import { LogOut } from "lucide-react";
 
 // A simple stepper component to show progress
