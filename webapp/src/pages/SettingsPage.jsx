@@ -3,9 +3,11 @@ import CompanyInfoSettings from "../components/settings/CompanyInfo";
 import PersonalSettings from "../components/settings/PersonalInfo";
 import SubscriptionSettings from "../components/settings/Subscription";
 import IntegrationsSettings from "../components/settings/Integrations";
+import { useAuth } from "../context/AuthContext";
 // import TeamManagement from "../components/settings/TeamManagement";
 
-const SettingsPage = ({ user, companyProfile, memberProfile }) => {
+const SettingsPage = () => {
+  const { user, companyProfile, memberProfile } = useAuth();
   const { t } = useTranslation();
 
   return (

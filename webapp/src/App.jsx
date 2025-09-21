@@ -4,18 +4,25 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Import components & pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import CreateCompanyPage from "./pages/CreateCompanyPage";
+import CreateCompanyFlow from "./pages/CreateCompanyFlow";
 import SettingsPage from "./pages/SettingsPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import CreateCompanyGuard from "./components/CreateCompanyGuard";
+import Step1_Name from "./pages/company-creation/Step1_Name";
+import Step2_Address from "./pages/company-creation/Step2_Address";
+import Step3_Subscription from "./pages/company-creation/Step3_Suscription";
 
 function App() {
-  const { loading, user } = useAuth();
+  const { loading, sessionStatus, user } = useAuth();
 
   // The main loading spinner for the entire application.
   if (loading) {
     return (
-      <span className="flex justify-center loading loading-dots loading-xl"></span>
+      <div className="flex flex-col h-screen items-center justify-center">
+        <span className="loading loading-dots loading-lg"></span>
+        <p className="mt-4 text-base">{sessionStatus}</p>
+      </div>
     );
   }
 
@@ -31,11 +38,19 @@ function App() {
         element={!user ? <RegisterPage /> : <Navigate to="/" />}
       />
 
-      {/* All protected routes now live under a single guard */}
+      {/* --- Company Creation Flow (Standalone) --- */}
+      <Route element={<CreateCompanyGuard />}>
+        <Route path="/create-company" element={<CreateCompanyFlow />}>
+          <Route index element={<Step1_Name />} />
+          <Route path="address" element={<Step2_Address />} />
+          <Route path="subscription" element={<Step3_Subscription />} />
+        </Route>
+      </Route>
+
+      {/* Protected Routes */}
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/create-company" element={<CreateCompanyPage />} />
       </Route>
 
       {/* Catch-all Route */}

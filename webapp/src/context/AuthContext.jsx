@@ -19,6 +19,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sessionStatus, setSessionStatus] = useState("Initializing session...");
   const [memberships, setMemberships] = useState([]);
   const [activeCompany, setActiveCompany] = useState(null);
   const [activeRole, setActiveRole] = useState(null);
@@ -50,6 +51,9 @@ export const AuthProvider = ({ children }) => {
     async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        setLoading(true);
+        setSessionStatus("Loading user data...");
+
         const membershipsRef = collection(
           db,
           "users",
@@ -65,11 +69,17 @@ export const AuthProvider = ({ children }) => {
         if (userMemberships.length === 1) {
           await setActiveCompanyById(userMemberships[0].companyId, currentUser);
         }
+
+        setSessionStatus("Authenticated");
+        setLoading(false); // Turn off loading only after all data is fetched
       } else {
         setUser(null);
         setMemberships([]);
         setActiveCompany(null);
         setActiveRole(null);
+
+        setSessionStatus("Unauthenticated");
+        setLoading(false); // Turn off loading
       }
     },
     [setActiveCompanyById]
@@ -77,9 +87,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      await loadUserSession(currentUser);
-      setLoading(false);
+    setSessionStatus("Initializing session...");
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      loadUserSession(currentUser);
     });
     return unsubscribe;
   }, [loadUserSession]);
@@ -87,6 +97,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    sessionStatus,
     memberships,
     activeCompany,
     activeRole,

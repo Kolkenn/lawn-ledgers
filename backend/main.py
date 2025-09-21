@@ -1,3 +1,4 @@
+from typing import Optional
 import stripe
 import os
 from fastapi import FastAPI, Request, HTTPException, Header
@@ -44,14 +45,17 @@ def read_root():
 class CheckoutSessionRequest(BaseModel):
     priceId: str
     companyId: str
+    isTrial: Optional[bool] = False
 
 @app.post("/api/stripe/create-checkout-session")
 async def create_checkout_session(payload: CheckoutSessionRequest):
     """
-    Creates a Stripe Checkout session for a new subscription.
+    Creates a Stripe Checkout session for a new subscription,
+    with an optional trial period.
     """
     price_id = payload.priceId
     company_id = payload.companyId
+    is_trial = payload.isTrial
     try:
         # Check if this company already has a Stripe Customer ID
         company_ref = db.collection('companies').document(company_id)
@@ -67,17 +71,22 @@ async def create_checkout_session(payload: CheckoutSessionRequest):
         # This is the URL they will be sent to if they cancel.
         cancel_url = f"{CLIENT_BASE_URL}/settings"
 
+        subscription_data = {
+            'metadata': {
+                'company_id': company_id
+            }
+        }
+
+        if is_trial:
+            subscription_data['trial_period_days'] = 14
+
         checkout_params = {
             'line_items': [{'price': price_id, 'quantity': 1}],
             'mode': 'subscription',
             'success_url': success_url,
             'cancel_url': cancel_url,
             # This ensures the subscription object has our internal ID from the very beginning.
-            'subscription_data': {
-                'metadata': {
-                    'company_id': company_id
-                }
-            }
+            'subscription_data': subscription_data
         }
         
         # If we have an existing customer, use them to avoid duplicates.

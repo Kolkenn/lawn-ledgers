@@ -12,7 +12,7 @@ const StatCard = ({ title, value, icon }) => (
   </div>
 );
 
-const DashboardPage = ({ companyProfile }) => {
+const DashboardPage = () => {
   const { t } = useTranslation();
 
   const totalPendingAmount = pendingInvoices.reduce(

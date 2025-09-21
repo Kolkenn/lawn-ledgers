@@ -4,15 +4,23 @@ import { useAuth } from "../context/AuthContext";
 import AppLayout from "./AppLayout";
 
 const ProtectedRoutes = () => {
-  const { user } = useAuth();
+  const { loading, user, memberships } = useAuth();
 
-  // The ONLY job of this component is to check if a user is logged in.
+  if (loading) {
+    return null;
+  }
+
+  // 1. If the user isn't logged in, send them to the login page.
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  // If they are logged in, render the standard layout.
-  // The <Outlet /> will render whichever child route is matched.
+  // 2. If the user is logged in but has NO memberships, force them to the creation flow.
+  if (memberships.length === 0) {
+    return <Navigate to="/create-company" />;
+  }
+
+  // 3. If all checks pass, render the main app layout..
   return (
     <AppLayout>
       <Outlet />
