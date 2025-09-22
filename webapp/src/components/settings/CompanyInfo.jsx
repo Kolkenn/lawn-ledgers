@@ -3,18 +3,22 @@ import { useTranslation } from "react-i18next";
 import { db, storage } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useAuth } from "../../context/AuthContext";
 import { Save, UploadCloud, Undo2 } from "lucide-react";
 
-const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
+const CompanyInfoSettings = () => {
+  const { activeRole, activeCompany } = useAuth();
   const { t } = useTranslation();
-  const isOwner = memberProfile?.role === "owner";
+  const isOwner = activeRole === "owner";
   // Text Field State Management
   const [formState, setFormState] = useState({
     name: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
+    address: {
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+    },
   });
   const [originalFormState, setOriginalFormState] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
@@ -25,21 +29,23 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState({ text: "", type: "" });
 
-  // Update company information state when companyProfile prop changes
+  // Update company information state when activeCompany prop changes
   useEffect(() => {
-    if (companyProfile) {
+    if (activeCompany) {
       const initialState = {
-        name: companyProfile.name || "",
-        address: companyProfile.address || "",
-        city: companyProfile.city || "",
-        state: companyProfile.state || "",
-        zip: companyProfile.zip || "",
+        name: activeCompany.name || "",
+        address: {
+          street: activeCompany.address.street || "",
+          city: activeCompany.address.city || "",
+          state: activeCompany.address.state || "",
+          zip: activeCompany.address.zip || "",
+        },
       };
       setFormState(initialState);
       setOriginalFormState(initialState);
-      setLogoPreview(companyProfile.logoUrl || "");
+      setLogoPreview(activeCompany.logoUrl || "");
     }
-  }, [companyProfile]);
+  }, [activeCompany]);
 
   // Track changes to form state to set dirty flag
   useEffect(() => {
@@ -47,10 +53,12 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
       // Create a new object with all string values from the current form state trimmed.
       const trimmedFormState = {
         name: formState.name.trim(),
-        address: formState.address.trim(),
-        city: formState.city.trim(),
-        state: formState.state.trim(),
-        zip: formState.zip.trim(),
+        address: {
+          street: formState.address.street.trim(),
+          city: formState.address.city.trim(),
+          state: formState.address.state.trim(),
+          zip: formState.address.zip.trim(),
+        },
       };
 
       // Compare the stringified version of the trimmed state to the original state.
@@ -64,13 +72,27 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
   // Handle text field changes
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setFormState((prevState) => ({ ...prevState, [id]: value }));
+    const keys = id.split(".");
+
+    if (keys.length === 1) {
+      // Handle top-level properties like 'id'
+      setFormState((prev) => ({ ...prev, [id]: value }));
+    } else {
+      // Handle nested properties like 'address.street'
+      setFormState((prev) => ({
+        ...prev,
+        [keys[0]]: {
+          ...prev[keys[0]],
+          [keys[1]]: value,
+        },
+      }));
+    }
   };
 
   // Handle logo updates
   const handleLogoUpload = async (e) => {
     const file = e.target.files[0];
-    const companyId = companyProfile?.id;
+    const companyId = activeCompany?.id;
     setUploadMessage({ text: "", type: "" });
 
     if (!file || !companyId || !isOwner) return;
@@ -131,16 +153,18 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
     e.preventDefault();
     setIsSaving(true);
     setStatusMessage({ text: "", type: "" });
-    const companyId = companyProfile?.id;
+    const companyId = activeCompany?.id;
     if (!companyId) return;
 
     try {
       const dataToUpdate = {
         name: formState.name.trim(),
-        address: formState.address.trim(),
-        city: formState.city.trim(),
-        state: formState.state.trim(),
-        zip: formState.zip.trim(),
+        address: {
+          street: formState.address.street.trim(),
+          city: formState.address.city.trim(),
+          state: formState.address.state.trim(),
+          zip: formState.address.zip.trim(),
+        },
       };
       // Update the company document with the new form state
       await updateDoc(doc(db, "companies", companyId), dataToUpdate);
@@ -246,7 +270,7 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
       {/* Company Info Container */}
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
             {/* Company Name Section */}
             <div>
               <label
@@ -264,18 +288,18 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
                 disabled // Company name is never editable here
               />
             </div>
-            {/* Company Address Section */}
+            {/* Company Street Section */}
             <div>
               <label
-                htmlFor="address"
-                className="block text-sm font-medium text-gray-700"
+                htmlFor="address.street"
+                className="block text-sm font-medium "
               >
                 {t("settings.companyInfo.addressLabel")}
               </label>
               <input
                 type="text"
-                id="address"
-                value={formState.address}
+                id="address.street"
+                value={formState.address.street}
                 onChange={handleInputChange}
                 className={inputClasses}
                 disabled={!isOwner}
@@ -284,15 +308,15 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
             {/* Company City Section */}
             <div>
               <label
-                htmlFor="city"
+                htmlFor="address.city"
                 className="block text-sm font-medium text-gray-700"
               >
                 {t("settings.companyInfo.cityLabel")}
               </label>
               <input
                 type="text"
-                id="city"
-                value={formState.city}
+                id="address.city"
+                value={formState.address.city}
                 onChange={handleInputChange}
                 className={inputClasses}
                 disabled={!isOwner}
@@ -308,8 +332,8 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
               </label>
               <input
                 type="text"
-                id="state"
-                value={formState.state}
+                id="address.state"
+                value={formState.address.state}
                 onChange={handleInputChange}
                 className={inputClasses}
                 disabled={!isOwner}
@@ -318,15 +342,15 @@ const CompanyInfoSettings = ({ companyProfile, memberProfile }) => {
             {/* Company ZIP Section */}
             <div>
               <label
-                htmlFor="zip"
+                htmlFor="address.zip"
                 className="block text-sm font-medium text-gray-700"
               >
                 {t("settings.companyInfo.zipLabel")}
               </label>
               <input
                 type="text"
-                id="zip"
-                value={formState.zip}
+                id="address.zip"
+                value={formState.address.zip}
                 onChange={handleInputChange}
                 className={inputClasses}
                 disabled={!isOwner}
