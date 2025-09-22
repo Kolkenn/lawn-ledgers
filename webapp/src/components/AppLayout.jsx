@@ -13,18 +13,23 @@ import {
 } from "lucide-react";
 
 const AppLayout = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { user, activeCompany } = useAuth();
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  // Function to close the drawer on mobile
+  const closeMobileDrawer = () => {
+    // Get the drawer toggle checkbox by its ID and uncheck it
+    const drawerToggle = document.getElementById("my-drawer-2");
+    if (drawerToggle) {
+      drawerToggle.checked = false;
+    }
   };
 
   const NavItem = ({ to, icon, children, onClick }) => (
     <li>
       <NavLink
         to={to}
-        onClick={onClick}
+        onClick={closeMobileDrawer}
         className={({ isActive }) =>
           `flex items-center p-3 my-1 rounded-lg transition-colors text-base-content hover:bg-base-200 ${
             isActive ? "!bg-primary text-primary-content" : ""
@@ -41,10 +46,10 @@ const AppLayout = () => {
     <div className="flex flex-col h-full bg-base-100 text-base-content">
       {/* Logo */}
       <div className="flex items-center justify-center h-15">
-        <h1 className="text-2xl font-bold text-primary">LawnLedgers</h1>
+        <h1 className="text-2xl font-bold text-primary">
+          {activeCompany.name}
+        </h1>
       </div>
-
-      <div className="divider divider-primary"></div>
 
       {/* Main Navigation */}
       <nav className="flex-grow p-2">
@@ -122,7 +127,7 @@ const AppLayout = () => {
       {/* Sidebar */}
       <div className="drawer-side" style={{ zIndex: 40 }}>
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-        <div className="w-80 h-full">
+        <div className="w-70 h-full">
           <SidebarContent />
         </div>
       </div>
