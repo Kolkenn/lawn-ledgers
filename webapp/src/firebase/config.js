@@ -16,11 +16,24 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Declare variables that will hold the initialized services
+let app;
+let auth = null;
+let db = null;
+let storage = null;
 
-// Export the Firebase services that we will use in our application
-// These are the handles to our backend services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+try {
+  // Attempt to initialize the Firebase app
+  app = initializeApp(firebaseConfig);
+  
+  // If initialization is successful, initialize the services
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+
+} catch (error) {
+  console.error("Firebase initialization failed:", error);
+}
+
+// Export the services (they will be null if initialization failed)
+export { auth, db, storage };
