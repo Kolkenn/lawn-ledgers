@@ -3,20 +3,18 @@ import { useTranslation } from "react-i18next";
 import { Save } from "lucide-react";
 import { auth, db } from "../../firebase/config";
 import { updateProfile } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  updateDoc,
-  writeBatch,
-} from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext";
+import { collection, doc, getDocs, writeBatch } from "firebase/firestore";
 
-const PersonalSettings = ({ user, companyProfile }) => {
+const PersonalSettings = () => {
+  const { user } = useAuth();
   const { t } = useTranslation();
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ text: "", type: "" });
+
+  console.info({ user });
 
   // Determine if the form is dirty (i.e., if changes have been made)
   useEffect(() => {

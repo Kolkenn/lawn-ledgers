@@ -10,6 +10,9 @@ import {
   LogOut,
   Languages,
   Menu,
+  User,
+  ReceiptText,
+  Users,
 } from "lucide-react";
 
 const AppLayout = () => {
@@ -56,6 +59,15 @@ const AppLayout = () => {
         <ul>
           <NavItem to="/" icon={<LayoutDashboard size={20} />}>
             {t("pageTitles.dashboard")}
+          </NavItem>
+          <NavItem to="/clients" icon={<User size={20} />}>
+            Clients
+          </NavItem>
+          <NavItem to="/invoices" icon={<ReceiptText size={20} />}>
+            Invoices
+          </NavItem>
+          <NavItem to="/team" icon={<Users size={20} />}>
+            Team Management
           </NavItem>
           <NavItem to="/settings" icon={<Settings size={20} />}>
             {t("pageTitles.settings")}

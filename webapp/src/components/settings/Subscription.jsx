@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CreditCard } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const TIER_PRICE_IDS = {
   starter: "price_1S7caTAMPnQQvgQLQXn5JZhT",
   growth: "price_1S7catAMPnQQvgQLc8tC044Q",
 };
 
-const SubscriptionSettings = ({ companyProfile, memberProfile }) => {
+const SubscriptionSettings = () => {
+  const { activeCompany, activeRole } = useAuth();
   const { t } = useTranslation();
-  const isOwner = memberProfile?.role === "owner";
+  const isOwner = activeRole === "owner";
   const [isLoading, setIsLoading] = useState(false);
 
   // Determine the current plan and status from the company profile
-  const currentPlan = companyProfile?.subscription?.planId || "Not Set";
-  const subscriptionStatus = companyProfile?.subscription?.status || "inactive";
-  const stripeCustomerId = companyProfile?.subscription?.stripeCustomerId;
+  const currentPlan = activeCompany?.subscription?.planId || "Not Set";
+  const subscriptionStatus = activeCompany?.subscription?.status || "inactive";
+  const stripeCustomerId = activeCompany?.subscription?.stripeCustomerId;
 
   const handleSubscribe = async (priceId) => {
     setIsLoading(true);
@@ -25,7 +27,7 @@ const SubscriptionSettings = ({ companyProfile, memberProfile }) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ priceId, companyId: companyProfile.id }),
+          body: JSON.stringify({ priceId, companyId: activeCompany.id }),
         }
       );
       const session = await response.json();

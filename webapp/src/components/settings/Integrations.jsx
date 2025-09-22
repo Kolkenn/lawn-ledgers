@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plug } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
-const IntegrationsSettings = ({ companyProfile, memberProfile }) => {
+const IntegrationsSettings = ({ companyProfile }) => {
+  const { activeCompany, activeRole } = useAuth();
   const { t } = useTranslation();
-  const isOwner = memberProfile?.role === "owner";
+  const isOwner = activeRole === "owner";
 
   const [isConnected, setIsConnected] = useState(
-    !!companyProfile?.stripeAccountId
+    !!activeCompany?.stripeAccountId
   );
   const [isLoading, setIsLoading] = useState(false);
 

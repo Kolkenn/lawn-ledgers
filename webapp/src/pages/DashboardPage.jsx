@@ -21,9 +21,9 @@ const DashboardPage = () => {
   );
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-8">
+    <div className="space-y-5">
       {/* Stat Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         <StatCard
           title={t("dashboard.upcomingJobs")}
           value={upcomingJobs.length}
@@ -42,7 +42,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Upcoming Jobs & Pending Invoices Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Upcoming Jobs List */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-bold text-gray-800 mb-4">
