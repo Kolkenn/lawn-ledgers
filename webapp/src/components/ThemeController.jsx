@@ -3,7 +3,7 @@ import { Sun, Moon } from "lucide-react";
 
 const ThemeController = () => {
   // Define your theme names
-  const lightTheme = "corporate";
+  const lightTheme = "emerald";
   const darkTheme = "forest";
 
   // 1. Initialize state from localStorage or system preference
