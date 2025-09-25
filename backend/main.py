@@ -67,9 +67,9 @@ async def create_checkout_session(payload: CheckoutSessionRequest):
             print(f"Found existing Stripe Customer ID for company {company_id}: {stripe_customer_id}")
 
         # This is the URL the user will be sent to after a successful payment.
-        success_url = f"{CLIENT_BASE_URL}/settings?session_id={{CHECKOUT_SESSION_ID}}"
+        success_url = f"{CLIENT_BASE_URL}/create-company/connect-onboarding?companyId={company_id}"
         # This is the URL they will be sent to if they cancel.
-        cancel_url = f"{CLIENT_BASE_URL}/settings"
+        cancel_url = f"{CLIENT_BASE_URL}/create-company/subscription" # Go back to subscription choice
 
         subscription_data = {
             'metadata': {
@@ -99,6 +99,106 @@ async def create_checkout_session(payload: CheckoutSessionRequest):
     except Exception as e:
         print("Error creating checkout session:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+class ConnectLinkRequest(BaseModel):
+    companyId: str
+    prefillData: bool
+
+@app.post("/api/stripe/create-connect-account-link")
+async def create_connect_account_link(payload: ConnectLinkRequest):
+   """
+   Creates a Stripe Connect Account if one doesn't exist,
+   then generates and returns an onboarding link.
+   """
+   try:
+       company_ref = db.collection('companies').document(payload.companyId)
+       company_doc = company_ref.get()
+       if not company_doc.exists:
+           raise HTTPException(status_code=404, detail="Company not found.")
+       company_data = company_doc.to_dict()
+
+       stripe_account_id = company_data.get('stripeAccountId')
+
+       # Create a new Connect Account only if one doesn't already exist.
+       if not stripe_account_id:
+           # ADD: Conditionally build the account creation parameters.
+           account_params = {
+               "type": "standard",
+               "metadata": {"company_id": payload.companyId}
+           }
+
+           if payload.prefillData:
+                print(f"Pre-filling data for company: {payload.companyId}")
+                
+                # --- Parse User's Name to Prefill ---
+                name_parts = company_data.get('ownerName', '').strip().split()
+
+                first_name = ""
+                last_name = ""
+
+                if len(name_parts) == 1:
+                    first_name = name_parts[0]
+                elif len(name_parts) > 1:
+                    first_name = " ".join(name_parts[:-1])
+                    last_name = name_parts[-1]
+                
+                # Combine all pre-fill data into a single dictionary
+                prefill_data = {
+                    "email": company_data.get('ownerEmail'),
+                    "business_profile": {
+                        "name": company_data.get('name'),
+                    },
+                    "company": {
+                        "name": company_data.get('name'),
+                        "address": {
+                            "line1": company_data.get('address', {}).get('street'),
+                            "city": company_data.get('address', {}).get('city'),
+                            "state": company_data.get('address', {}).get('state'),
+                            "postal_code": company_data.get('address', {}).get('zip'),
+                            "country": "US"
+                        }
+                    },
+                    "individual": {
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'email': company_data.get('ownerEmail')
+                    }
+                }
+                
+                # Use a single update call to add all the data at once.
+                account_params.update(prefill_data)
+
+            # The stripe.Account.create(**account_params) call remains the same
+           account = stripe.Account.create(**account_params)
+           stripe_account_id = account.id
+           company_ref.set({'stripeAccountId': stripe_account_id}, merge=True)
+
+       # Create the account link for onboarding.
+       account_link = stripe.AccountLink.create(
+           account=stripe_account_id,
+           refresh_url=f"{CLIENT_BASE_URL}/create-company/connect-onboarding", 
+           return_url=f"{CLIENT_BASE_URL}/onboard-status",
+           type="account_onboarding",
+       )
+       return {"url": account_link.url}
+   except Exception as e:
+       print(f"Error creating account link for company {payload.companyId}: {str(e)}")
+       raise HTTPException(status_code=500, detail=str(e))
+
+# ADD: New endpoint for the Step 4 page to check status.
+@app.get("/api/company/status/{company_id}")
+async def get_company_status(company_id: str):
+   """
+   Retrieves and returns the subscription and connect status for a company.
+   """
+   try:
+       company_ref = db.collection('companies').document(company_id)
+       company_doc = company_ref.get()
+       if not company_doc.exists:
+           raise HTTPException(status_code=404, detail="Company not found.")
+       return company_doc.to_dict()
+   except Exception as e:
+       raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/stripe/create-portal-session")
 async def create_portal_session(request: Request):
@@ -148,20 +248,17 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
     
     print(f"Received Stripe event: {event_type}")
 
-    # These are the events that directly reflect the subscription's state
-    SUBSCRIPTION_EVENTS = {
-        'customer.subscription.created',
-        'customer.subscription.updated',
-        'customer.subscription.deleted'
-    }
-
     try:
-        if event_type in SUBSCRIPTION_EVENTS:
+        if event_type.startswith('customer.subscription.'):
             # These events are the source of truth for the subscription state.
             # The `data_object` here IS the subscription object.
             subscription = data_object
             _update_firestore_subscription(subscription)
-
+        elif event_type == 'account.updated':
+            # ADD: Handle updates to the Connected Account.
+            # This tells you when their onboarding is complete and they can accept payments.
+            account = data_object
+            _update_firestore_account(account)
         else:
             print(f"Unhandled event type: {event_type}")
 
@@ -214,4 +311,31 @@ def _update_firestore_subscription(subscription: stripe.Subscription):
     except Exception as e:
         print(f"FATAL: Error updating Firestore for company {company_id}: {e}")
         # Re-raising here to be caught by the main handler, which will return a 500
+        raise e
+
+# Helper function to handle `account.updated` events.
+def _update_firestore_account(account: stripe.Account):
+    """
+    Updates Firestore with the status of a Stripe Connected Account.
+    """
+    company_id = account.metadata.get('company_id')
+    if not company_id:
+        print(f"ERROR: Webhook for account {account.id} is missing 'company_id' in metadata.")
+        return
+
+    print(f"Updating account status for company: {company_id} from account: {account.id}")
+    try:
+        company_ref = db.collection('companies').document(company_id)
+        
+        account_data = {
+            'charges_enabled': account.get('charges_enabled'),
+            'payouts_enabled': account.get('payouts_enabled'),
+            'details_submitted': account.get('details_submitted'),
+        }
+        
+        company_ref.set({'stripeConnect': account_data}, merge=True)
+        print(f"Successfully updated Connect status for company: {company_id}")
+
+    except Exception as e:
+        print(f"FATAL: Error updating Firestore for company {company_id} from account update: {e}")
         raise e

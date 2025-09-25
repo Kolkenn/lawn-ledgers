@@ -12,6 +12,8 @@ import CreateCompanyFlow from "./pages/company-creation/CreateCompanyFlow";
 import Step1_Name from "./pages/company-creation/Step1_Name";
 import Step2_Address from "./pages/company-creation/Step2_Address";
 import Step3_Subscription from "./pages/company-creation/Step3_Suscription";
+import Step4_ConnectOnboarding from "./pages/company-creation/Step4_ConnectOnboarding";
+import OnboardingComplete from "./pages/company-creation/OnboardingComplete";
 
 function App() {
   const { loading, sessionStatus, user } = useAuth();
@@ -44,6 +46,11 @@ function App() {
           <Route index element={<Step1_Name />} />
           <Route path="address" element={<Step2_Address />} />
           <Route path="subscription" element={<Step3_Subscription />} />
+          <Route
+            path="connect-onboarding"
+            element={<Step4_ConnectOnboarding />}
+          />
+          <Route path="onboard-status" element={<OnboardingComplete />} />
         </Route>
       </Route>
 

@@ -1,5 +1,4 @@
-// src/pages/company-creation/Step3_Subscription.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase/config";
@@ -17,10 +16,9 @@ const TIER_PRICE_IDS = {
 
 const Step3_Subscription = () => {
   const { companyData } = useOutletContext();
-  const { user } = useAuth();
+  const { user, setActiveCompanyById } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
 
   // Guard: Redirect if prior steps are not complete.
   useEffect(() => {
@@ -30,16 +28,16 @@ const Step3_Subscription = () => {
   }, [companyData, navigate]);
 
   /**
-   * Initiates either a trial or a paid subscription checkout.
-   * @param {boolean} isTrial - True if the user selected the trial option.
+   * Creates the company in Firestore and initiates a subscription checkout.
    */
-  const handleInitiateCheckout = async (isTrial, selectedPlan) => {
+  const handleFinalizeSetup = async (isTrial, selectedPlan) => {
     setIsLoading(true);
     try {
-      // This is the function you will write at the end of the entire flow
-      // to create the company document in Firestore *before* checkout.
+      // Create the company in Firestore.
       const companyId = await createCompanyInFirestore();
-      if (!companyId) throw new Error("Failed to create company document.");
+      if (!companyId) throw new Error("Failed to create company.");
+
+      await setActiveCompanyById(companyId);
 
       const response = await fetch(
         "http://127.0.0.1:8000/api/stripe/create-checkout-session",
@@ -49,12 +47,12 @@ const Step3_Subscription = () => {
           body: JSON.stringify({
             priceId: selectedPlan,
             companyId: companyId,
-            isTrial: isTrial, // <-- The new flag!
+            isTrial: isTrial,
           }),
         }
       );
-      const session = await response.json();
-      window.location.href = session.url;
+      const { url } = await response.json();
+      window.location.href = url;
     } catch (error) {
       console.error("Error creating company or checkout session:", error);
       alert("Could not complete setup. Please try again.");
@@ -76,13 +74,9 @@ const Step3_Subscription = () => {
           state: companyData.state.trim(),
           zip: companyData.zip.trim(),
         },
-        subscription: {
-          plan: companyData.subscriptionTier,
-          status:
-            companyData.subscriptionTier === "trial" ? "trialing" : "active",
-          startDate: serverTimestamp(),
-        },
         ownerUid: user.uid,
+        ownerEmail: user.email,
+        ownerName: user.name,
         createdAt: serverTimestamp(),
       });
 
@@ -127,21 +121,28 @@ const Step3_Subscription = () => {
 
   return (
     <div>
-      <h2 className="card-title mb-4">Choose Your Plan</h2>
+      <h3 className="font-bold mb-4">Choose Your Subscription</h3>
       <div className="card-actions justify-center space-x-4 mt-6">
         <button
-          onClick={() => handleInitiateCheckout(true, TIER_PRICE_IDS.starter)}
-          className="btn btn-outline btn-primary"
+          onClick={() => handleFinalizeSetup(true, TIER_PRICE_IDS.starter)}
+          className="btn btn-primary "
           disabled={isLoading}
         >
           Start 14-Day Free Trial
         </button>
         <button
-          onClick={() => handleInitiateCheckout(false, TIER_PRICE_IDS.starter)}
+          onClick={() => handleFinalizeSetup(false, TIER_PRICE_IDS.starter)}
           className="btn btn-primary"
           disabled={isLoading}
         >
-          Subscribe Now
+          Starter Plan
+        </button>
+        <button
+          onClick={() => handleFinalizeSetup(false, TIER_PRICE_IDS.growth)}
+          className="btn btn-primary"
+          disabled={isLoading}
+        >
+          Growth Plan
         </button>
       </div>
       <div className="card-actions justify-between mt-12">
