@@ -35,7 +35,7 @@ const ThemeController = () => {
 
   return (
     <label
-      className="swap swap-rotate btn btn-ghost btn-circle"
+      className="swap swap-rotate btn btn-circle"
       title="Toggle theme"
       aria-label="Toggle theme"
     >

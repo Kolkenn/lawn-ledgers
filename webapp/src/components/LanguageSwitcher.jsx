@@ -14,11 +14,10 @@ const LanguageSwitcher = () => {
       <div
         tabIndex={0}
         role="button"
-        className="btn"
+        className="btn btn-circle"
         aria-label={t("language")}
         title={t("language")}
       >
-        {t("language")}
         <Languages />
       </div>
       {/* Dropdown menu */}

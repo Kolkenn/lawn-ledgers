@@ -11,8 +11,7 @@ import {
 // Import components & pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import SettingsPage from "./pages/SettingsPage";
-import DashboardPage from "./pages/DashboardPage";
+import AppLayout from "./layouts/AppLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import CreateCompanyGuard from "./components/CreateCompanyGuard";
 import CreateCompanyFlow from "./pages/company-creation/CreateCompanyFlow";
@@ -81,8 +80,7 @@ function App() {
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/*" element={<AppLayout />} />
       </Route>
 
       {/* Catch-all Route */}
