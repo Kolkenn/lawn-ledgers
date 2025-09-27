@@ -67,7 +67,7 @@ async def create_checkout_session(payload: CheckoutSessionRequest):
             print(f"Found existing Stripe Customer ID for company {company_id}: {stripe_customer_id}")
 
         # This is the URL the user will be sent to after a successful payment.
-        success_url = f"{CLIENT_BASE_URL}/create-company/connect-onboarding?companyId={company_id}"
+        success_url = f"{CLIENT_BASE_URL}/create-company/connect-onboarding"
         # This is the URL they will be sent to if they cancel.
         cancel_url = f"{CLIENT_BASE_URL}/create-company/subscription" # Go back to subscription choice
 
@@ -85,6 +85,7 @@ async def create_checkout_session(payload: CheckoutSessionRequest):
             'mode': 'subscription',
             'success_url': success_url,
             'cancel_url': cancel_url,
+            'customer_email': company_doc.get('ownerEmail'),
             # This ensures the subscription object has our internal ID from the very beginning.
             'subscription_data': subscription_data
         }
