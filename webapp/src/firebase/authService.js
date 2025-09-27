@@ -73,6 +73,10 @@ export const handleEmailLogin = async (email, password) => {
 export const handleLogout = async () => {
   try {
     await signOut(auth);
+    // Clear all data saved in the session.
+    // sessionStorage.clear();
+
+    console.log("User logged out and session storage cleared.");
   } catch (err) {
     console.error("Error signing out:", err);
     throw err;

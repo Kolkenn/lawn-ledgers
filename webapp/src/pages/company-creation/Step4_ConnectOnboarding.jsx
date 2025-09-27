@@ -6,19 +6,22 @@ const Step4_ConnectOnboarding = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [prefillData, setPrefillData] = useState(true);
-  const { activeCompany } = useAuth();
+  const { setActiveCompanyById } = useAuth();
+  let companyId = sessionStorage.getItem("onboardingCompanyId");
 
   const handleEnablePayments = async () => {
     setIsLoading(true);
     try {
       // This is the new, dedicated backend endpoint.
       const response = await fetch(
-        "http://127.0.0.1:8000/api/stripe/create-connect-account-link",
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/stripe/create-connect-account-link`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            companyId: activeCompany.id,
+            companyId: companyId,
             prefillData: prefillData,
           }),
         }
@@ -38,7 +41,12 @@ const Step4_ConnectOnboarding = () => {
   };
 
   const handleSkip = () => {
-    // If they skip, send them to their main dashboard.
+    // Set Active Company
+    setActiveCompanyById(companyId);
+    // If they skip, clear session cache.
+    sessionStorage.removeItem("companyCreationData");
+    sessionStorage.removeItem("onboardingCompanyId");
+    // Send them to their main dashboard.
     navigate("/");
   };
 
@@ -87,7 +95,7 @@ const Step4_ConnectOnboarding = () => {
         </button>
         <button
           onClick={handleSkip}
-          className="btn btn-ghost"
+          className="btn btn-outline"
           disabled={isLoading}
         >
           I'll Do This Later

@@ -34,8 +34,8 @@ const Step2_Address = () => {
   };
 
   return (
-    <form onSubmit={handleNext}>
-      <h2 className="card-title mb-4">Where is your company located?</h2>
+    <form className="m-2" onSubmit={handleNext}>
+      <h2 className="card card-title mb-4">Where is your company located?</h2>
       <div className="space-y-4">
         <div className="form-control">
           <label className="label">
@@ -45,7 +45,7 @@ const Step2_Address = () => {
             type="text"
             name="address"
             placeholder="123 Main St"
-            className="input input-bordered w-full"
+            className="input focus:input-primary w-full"
             value={companyData.address}
             onChange={handleInputChange}
             required
@@ -60,7 +60,7 @@ const Step2_Address = () => {
               type="text"
               name="city"
               placeholder="Anytown"
-              className="input input-bordered w-full"
+              className="input focus:input-primary w-full"
               value={companyData.city}
               onChange={handleInputChange}
               required
@@ -74,7 +74,7 @@ const Step2_Address = () => {
               type="text"
               name="state"
               placeholder="CA"
-              className="input input-bordered w-full"
+              className="input focus:input-primary w-full"
               value={companyData.state}
               onChange={handleInputChange}
               required
@@ -88,7 +88,7 @@ const Step2_Address = () => {
               type="text"
               name="zip"
               placeholder="90210"
-              className="input input-bordered w-full"
+              className="input focus:input-primary w-full"
               value={companyData.zip}
               onChange={handleInputChange}
               required
@@ -100,7 +100,7 @@ const Step2_Address = () => {
         <button
           type="button"
           onClick={() => navigate("/create-company")}
-          className="btn btn-ghost"
+          className="btn btn-outline"
         >
           Back
         </button>

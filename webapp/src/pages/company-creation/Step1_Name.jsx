@@ -12,13 +12,13 @@ const Step1_Name = () => {
   };
 
   return (
-    <form onSubmit={handleNext}>
+    <form className="m-2" onSubmit={handleNext}>
       <h2 className="card-title mb-4">What is your company's name?</h2>
       <div className="form-control">
         <input
           type="text"
           placeholder="e.g., Lawn & Order"
-          className="input input-bordered w-full"
+          className="input focus:input-primary w-full"
           value={companyData.name}
           onChange={(e) =>
             setCompanyData({ ...companyData, name: e.target.value })

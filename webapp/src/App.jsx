@@ -1,5 +1,12 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
-import { Routes, Route, Navigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 // Import components & pages
 import LoginPage from "./pages/LoginPage";
@@ -11,12 +18,23 @@ import CreateCompanyGuard from "./components/CreateCompanyGuard";
 import CreateCompanyFlow from "./pages/company-creation/CreateCompanyFlow";
 import Step1_Name from "./pages/company-creation/Step1_Name";
 import Step2_Address from "./pages/company-creation/Step2_Address";
-import Step3_Subscription from "./pages/company-creation/Step3_Suscription";
+import Step3_Subscription from "./pages/company-creation/Step3_Subscription";
 import Step4_ConnectOnboarding from "./pages/company-creation/Step4_ConnectOnboarding";
-import OnboardingComplete from "./pages/company-creation/OnboardingComplete";
+import SubscriptionBlocker from "./components/SubscriptionBlocker";
 
 function App() {
-  const { loading, sessionStatus, user } = useAuth();
+  const { loading, sessionStatus, user, onboardingStatus } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // If an owner needs to subscribe...
+    if (onboardingStatus === "needsSubscription") {
+      if (!location.pathname.startsWith("/create-company")) {
+        navigate(`/create-company/subscription`);
+      }
+    }
+  }, [onboardingStatus, navigate, location.pathname]);
 
   // The main loading spinner for the entire application.
   if (loading) {
@@ -26,6 +44,14 @@ function App() {
         <p className="mt-4 text-base">{sessionStatus}</p>
       </div>
     );
+  }
+
+  if (
+    !loading &&
+    user &&
+    onboardingStatus === "subscriptionRequired_contactAdmin"
+  ) {
+    return <SubscriptionBlocker />;
   }
 
   return (
@@ -50,7 +76,6 @@ function App() {
             path="connect-onboarding"
             element={<Step4_ConnectOnboarding />}
           />
-          <Route path="onboard-status" element={<OnboardingComplete />} />
         </Route>
       </Route>
 

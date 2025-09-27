@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const CreateCompanyGuard = () => {
-  const { loading, user, memberships } = useAuth();
+  const { loading, user } = useAuth();
 
   if (loading) {
     return null;

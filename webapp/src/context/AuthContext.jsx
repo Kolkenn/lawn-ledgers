@@ -23,7 +23,9 @@ export const AuthProvider = ({ children }) => {
   const [memberships, setMemberships] = useState([]);
   const [activeCompany, setActiveCompany] = useState(null);
   const [activeRole, setActiveRole] = useState(null);
+  const [onboardingStatus, setOnboardingStatus] = useState("checking"); // 'checking', 'needsSubscription', 'complete'
   const doLogout = async () => {
+    console.log("🔒 [AUTH] Logout requested.");
     await handleLogout();
   };
 
@@ -38,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     const memberSnap = await getDoc(
       doc(db, "companies", companyId, "members", userToQuery.uid)
     );
+    console.log(`🏢 [SESSION] Setting active company: ${companyId}`);
 
     if (companySnap.exists() && memberSnap.exists()) {
       setActiveCompany({ id: companySnap.id, ...companySnap.data() });
@@ -49,6 +52,7 @@ export const AuthProvider = ({ children }) => {
   // Function to load user session data
   const loadUserSession = useCallback(
     async (currentUser) => {
+      console.log("🔄 [SESSION] Loading user session...");
       if (currentUser) {
         setUser(currentUser);
         setLoading(true);
@@ -64,6 +68,9 @@ export const AuthProvider = ({ children }) => {
         const userMemberships = membershipSnapshot.docs.map((doc) =>
           doc.data()
         );
+        console.log(
+          `📂 [SESSION] Found ${userMemberships.length} memberships for user ${currentUser.uid}.`
+        );
         setMemberships(userMemberships);
 
         if (userMemberships.length === 1) {
@@ -73,6 +80,7 @@ export const AuthProvider = ({ children }) => {
         setSessionStatus("Authenticated");
         setLoading(false); // Turn off loading only after all data is fetched
       } else {
+        console.log("👤 [SESSION] No current user. Clearing session data.");
         setUser(null);
         setMemberships([]);
         setActiveCompany(null);
@@ -89,10 +97,53 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setSessionStatus("Initializing session...");
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log(
+        `🔔 [AUTH] Auth state changed. User:`,
+        currentUser?.uid || "None"
+      );
       loadUserSession(currentUser);
     });
     return unsubscribe;
   }, [loadUserSession]);
+
+  useEffect(() => {
+    // Don't run the check until the initial user session loading is complete.
+    if (loading) {
+      console.log("⏳ [STATUS] Auth loading, skipping status check.");
+      return;
+    }
+    if (activeCompany) {
+      const subscriptionStatus = activeCompany.subscription?.status;
+      const isSubscribed =
+        subscriptionStatus === "active" || subscriptionStatus === "trialing";
+      // If the company is not subscribed
+      if (!isSubscribed) {
+        console.log(
+          `🚦 [STATUS] Company ${activeCompany.id} is NOT subscribed. Checking role...`
+        );
+        // ...determine the user's role
+        if (activeRole === "owner") {
+          // Only owners should be prompted to subscribe.
+          sessionStorage.setItem("onboardingCompanyId", activeCompany.id);
+          setOnboardingStatus("needsSubscription");
+          console.log(
+            "👑 [STATUS] User is owner. Setting status to 'needsSubscription'."
+          );
+        } else {
+          // Non-owners get a different status.
+          setOnboardingStatus("subscriptionRequired_contactAdmin");
+          console.log(
+            `👥 [STATUS] User role is '${activeRole}'. Setting status to 'subscriptionRequired_contactAdmin'.`
+          );
+        }
+      } else {
+        setOnboardingStatus("complete"); // Company has a valid subscription.
+        console.log(
+          `✅ [STATUS] Company ${activeCompany.id} has an active subscription. Status: 'complete'.`
+        );
+      }
+    }
+  }, [activeCompany, loading]);
 
   const value = {
     user,
@@ -101,7 +152,8 @@ export const AuthProvider = ({ children }) => {
     memberships,
     activeCompany,
     activeRole,
-    setActiveCompanyById, // Expose your functions
+    setActiveCompanyById,
+    onboardingStatus,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
