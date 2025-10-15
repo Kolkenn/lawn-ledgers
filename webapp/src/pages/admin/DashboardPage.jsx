@@ -13,7 +13,7 @@ const DashboardPage = () => {
   return (
     <div className="space-y-6">
       {/* DaisyUI Stats Component */}
-      <div className="stats shadow w-full">
+      <div className="stats bg-base-100 shadow-lg w-full">
         <div className="stat">
           <div className="stat-figure text-primary">
             <CalendarClock size={32} />
@@ -44,7 +44,7 @@ const DashboardPage = () => {
       {/* Upcoming Jobs & Pending Invoices Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Jobs List */}
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 shadow-lg">
           <div className="card-body">
             <h2 className="card-title">{t("dashboard.upcomingJobs")}</h2>
             <div className="space-y-3 mt-4">
@@ -73,7 +73,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Pending Invoices List */}
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 shadow-lg">
           <div className="card-body">
             <h2 className="card-title">{t("dashboard.pendingInvoices")}</h2>
             <div className="space-y-3 mt-4">

@@ -5,9 +5,10 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase/config";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { getMemberships, getCompany, getRoleInCompany } from "../api/companies";
 
 import { handleLogout } from "../firebase/authService";
 import useIdleTimer from "../hooks/useIdleTimer";
@@ -20,9 +21,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sessionStatus, setSessionStatus] = useState("Initializing session...");
-  const [memberships, setMemberships] = useState([]);
-  const [activeCompany, setActiveCompany] = useState(null);
-  const [activeRole, setActiveRole] = useState(null);
+  const [activeCompanyId, setActiveCompanyId] = useState(null);
+
+  // The onboarding status check remains here as it's closely tied to the session logic.
   const [onboardingStatus, setOnboardingStatus] = useState("checking"); // 'checking', 'needsSubscription', 'complete'
   const doLogout = async () => {
     console.log("🔒 [AUTH] Logout requested.");
@@ -31,67 +32,30 @@ export const AuthProvider = ({ children }) => {
 
   useIdleTimer(doLogout);
 
-  // Function to set the active company and role based on companyId
-  const setActiveCompanyById = useCallback(async (companyId, currentUser) => {
-    const userToQuery = currentUser || auth.currentUser;
-    if (!userToQuery) return;
+  // --- DATA FETCHING WITH TANSTACK QUERY ---
+  // Fetch the user's memberships. This query is dependent on the user's UID.
+  const { data: memberships, isLoading: isLoadingMemberships } = useQuery({
+    queryKey: ["memberships", user?.uid],
+    queryFn: () => getMemberships(user.uid),
+    enabled: !!user, // Only run this query when the user is logged in
+  });
 
-    const companySnap = await getDoc(doc(db, "companies", companyId));
-    const memberSnap = await getDoc(
-      doc(db, "companies", companyId, "members", userToQuery.uid)
-    );
-    console.log(`🏢 [SESSION] Setting active company: ${companyId}`);
+  // Fetch the full active company profile. This query depends on `activeCompanyId`.
+  const { data: activeCompany, isLoading: isLoadingCompany } = useQuery({
+    queryKey: ["company", activeCompanyId],
+    queryFn: () => getCompany(activeCompanyId),
+    enabled: !!activeCompanyId,
+    staleTime: 5 * 60 * 1000, // Cache company data for 5 minutes
+  });
 
-    if (companySnap.exists() && memberSnap.exists()) {
-      setActiveCompany({ id: companySnap.id, ...companySnap.data() });
-      setActiveRole(memberSnap.data().role);
-    }
-    return null;
-  }, []);
-
-  // Function to load user session data
-  const loadUserSession = useCallback(
-    async (currentUser) => {
-      console.log("🔄 [SESSION] Loading user session...");
-      if (currentUser) {
-        setUser(currentUser);
-        setLoading(true);
-        setSessionStatus("Loading user data...");
-
-        const membershipsRef = collection(
-          db,
-          "users",
-          currentUser.uid,
-          "memberships"
-        );
-        const membershipSnapshot = await getDocs(membershipsRef);
-        const userMemberships = membershipSnapshot.docs.map((doc) =>
-          doc.data()
-        );
-        console.log(
-          `📂 [SESSION] Found ${userMemberships.length} memberships for user ${currentUser.uid}.`
-        );
-        setMemberships(userMemberships);
-
-        if (userMemberships.length === 1) {
-          await setActiveCompanyById(userMemberships[0].companyId, currentUser);
-        }
-
-        setSessionStatus("Authenticated");
-        setLoading(false); // Turn off loading only after all data is fetched
-      } else {
-        console.log("👤 [SESSION] No current user. Clearing session data.");
-        setUser(null);
-        setMemberships([]);
-        setActiveCompany(null);
-        setActiveRole(null);
-
-        setSessionStatus("Unauthenticated");
-        setLoading(false); // Turn off loading
-      }
-    },
-    [setActiveCompanyById]
-  );
+  // Fetch the user's role in the active company.
+  const { data: activeRole, isLoading: isLoadingRole } = useQuery({
+    queryKey: ["role", user?.uid, activeCompanyId],
+    queryFn: () => getRoleInCompany(user.uid, activeCompanyId),
+    enabled: !!user && !!activeCompanyId,
+    staleTime: 5 * 60 * 1000, // Cache role data for 5 minutes
+  });
+  // -----------------------------------------
 
   useEffect(() => {
     setLoading(true);
@@ -101,10 +65,37 @@ export const AuthProvider = ({ children }) => {
         `🔔 [AUTH] Auth state changed. User:`,
         currentUser?.uid || "None"
       );
-      loadUserSession(currentUser);
+      if (currentUser) {
+        setUser(currentUser);
+        // The membership query will automatically run now that `user` is set.
+      } else {
+        // Clear all session state on logout
+        setUser(null);
+        setActiveCompanyId(null);
+        setSessionStatus("Unauthenticated");
+      }
+      // The initial auth check is complete, so we can set loading to false.
+      // The rest of the app will react to the user object being set.
+      setLoading(false);
     });
     return unsubscribe;
-  }, [loadUserSession]);
+  }, []);
+
+  // This effect determines the active company once memberships are loaded.
+  useEffect(() => {
+    if (memberships && memberships.length > 0 && !activeCompanyId) {
+      // Default to the first company if multiple exist.
+      // You could enhance this to use localStorage to remember the last active company.
+      setActiveCompanyId(memberships[0].companyId);
+    }
+  }, [memberships, activeCompanyId]);
+
+  // This effect updates the session status once all core data is loaded.
+  useEffect(() => {
+    if (user && !isLoadingMemberships && !isLoadingCompany && !isLoadingRole) {
+      setSessionStatus("Authenticated");
+    }
+  }, [user, isLoadingMemberships, isLoadingCompany, isLoadingRole]);
 
   useEffect(() => {
     // Don't run the check until the initial user session loading is complete.
@@ -147,13 +138,17 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    // The main loading flag now only signals the initial auth check.
     loading,
     sessionStatus,
     memberships,
     activeCompany,
     activeRole,
-    setActiveCompanyById,
+    // Expose a function to allow switching companies
+    setActiveCompanyId,
     onboardingStatus,
+    isLoadingCompany,
+    isLoadingMemberships, // Expose this for staged loading
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

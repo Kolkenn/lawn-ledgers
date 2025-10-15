@@ -9,6 +9,7 @@ import DashboardPage from "../pages/admin/DashboardPage";
 import SchedulePage from "../pages/admin/SchedulePage";
 import ClientsPage from "../pages/admin/ClientsPage";
 import InvoicesPage from "../pages/admin/InvoicesPage";
+import CompanySettingsPage from "../pages/admin/CompanySettingsPage";
 import TodaysJobsPage from "../pages/crew/TodaysJobsPage";
 import TimeclockPage from "../pages/crew/TimeclockPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -30,6 +31,9 @@ const AppLayout = () => {
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/invoices" element={<InvoicesPage />} />
+          <Route path="/settings" element={<CompanySettingsPage />} />
+          <Route path="/jobs" element={<TodaysJobsPage />} />
+          <Route path="/timeclock" element={<TimeclockPage />} />
           {/* Add other admin routes here */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>

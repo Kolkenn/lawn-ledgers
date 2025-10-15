@@ -15,7 +15,7 @@ const Step4_ConnectOnboarding = () => {
       // This is the new, dedicated backend endpoint.
       const response = await fetch(
         `${
-          import.meta.env.VITE_API_BASE_URL
+          import.meta.env.VITE_BACKEND_API_URL
         }/api/stripe/create-connect-account-link`,
         {
           method: "POST",

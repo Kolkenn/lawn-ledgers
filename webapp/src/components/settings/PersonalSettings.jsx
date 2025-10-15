@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Save, KeyRound } from "lucide-react";
+import { Save, Info } from "lucide-react";
 import { auth, db } from "../../firebase/config";
-import { updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
 import { collection, doc, getDocs, writeBatch } from "firebase/firestore";
 
@@ -13,7 +13,6 @@ const PersonalSettings = () => {
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ text: "", type: "" });
-  const [resetStatus, setResetStatus] = useState({ text: "", type: "" });
 
   useEffect(() => {
     const hasChanged = displayName.trim() !== (user?.displayName || "");
@@ -32,25 +31,58 @@ const PersonalSettings = () => {
     }
   }, [user]);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ... (Your existing handleSubmit logic remains unchanged) ...
-  };
-
-  const handlePasswordReset = async () => {
-    setResetStatus({ text: "", type: "" });
-    try {
-      await sendPasswordResetEmail(auth, user.email);
-      setResetStatus({
-        text: t("settings.password.status.success"),
-        type: "success",
-      });
-    } catch (error) {
-      setResetStatus({
-        text: t("settings.password.status.error"),
+    setStatusMessage({ text: "", type: "" });
+    if (displayName.trim() === "") {
+      setStatusMessage({
+        text: t("settings.personalInfo.status.empty"),
         type: "error",
       });
-      console.error("Error sending password reset email:", error);
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const newName = displayName.trim();
+
+      // 1. Update the master profile in Firebase Authentication
+      await updateProfile(auth.currentUser, { displayName: newName });
+
+      // 2. Fetch all of the user's company memberships
+      const membershipsRef = collection(db, "users", user.uid, "memberships");
+      const membershipSnapshot = await getDocs(membershipsRef);
+
+      // 3. Create a batch write to update all member documents atomically
+      const batch = writeBatch(db);
+      membershipSnapshot.forEach((membershipDoc) => {
+        const companyId = membershipDoc.data().companyId;
+        const memberDocRef = doc(
+          db,
+          "companies",
+          companyId,
+          "members",
+          user.uid
+        );
+        batch.update(memberDocRef, { displayName: newName });
+      });
+
+      // 4. Commit the batch
+      await batch.commit();
+
+      setStatusMessage({
+        text: t("settings.personalInfo.status.success"),
+        type: "success",
+      });
+      console.log("Profile updated successfully across all memberships.");
+    } catch (err) {
+      setStatusMessage(t("settings.personalInfo.status.error"));
+      console.error("Error updating profile:", err);
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate a short delay for UX
+      setStatusMessage({ text: "", type: "" });
+      setIsDirty(false);
+      setIsSaving(false);
     }
   };
 
@@ -94,19 +126,7 @@ const PersonalSettings = () => {
         {/* SSO Notice */}
         {!authProviderConfig.isEditable && (
           <div className="alert alert-info">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-current shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
+            <Info />
             <span>
               {t("settings.personalInfo.ssoNotice", {
                 provider: authProviderConfig.providerName,
@@ -140,38 +160,6 @@ const PersonalSettings = () => {
           </div>
         )}
       </form>
-
-      {/* --- Password Reset Section (Conditional) --- */}
-      {authProviderConfig.providerName === null && (
-        <div className="space-y-4 pt-6 border-t border-base-300">
-          <h2 className="text-xl font-semibold">
-            {t("settings.password.title")}
-          </h2>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">
-                {t("settings.password.description")}
-              </span>
-            </label>
-            <button
-              onClick={handlePasswordReset}
-              className="btn btn-outline w-full sm:w-auto"
-            >
-              <KeyRound size={16} />
-              {t("settings.password.buttonText")}
-            </button>
-          </div>
-          {resetStatus.text && (
-            <div
-              className={`alert ${
-                resetStatus.type === "error" ? "alert-error" : "alert-success"
-              }`}
-            >
-              <span>{resetStatus.text}</span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

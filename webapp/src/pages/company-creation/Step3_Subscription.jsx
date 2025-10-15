@@ -96,7 +96,7 @@ const Step3_Subscription = () => {
 
       const response = await fetch(
         `${
-          import.meta.env.VITE_API_BASE_URL
+          import.meta.env.VITE_BACKEND_API_URL
         }/api/stripe/create-checkout-session`,
         {
           method: "POST",

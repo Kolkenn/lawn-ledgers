@@ -7,6 +7,9 @@ const LanguageSwitcher = () => {
   // Function to change the language
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { handleGoogleSignIn, handleEmailSignUp } from "../firebase/authService";
+import { User, Mail, KeyRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import PasswordStrengthIndicator from "../components/PasswordStrengthIndicator";
@@ -119,6 +120,14 @@ const RegisterPage = () => {
       setError("A full name is required.");
       return;
     }
+    if (!email) {
+      setError("Email address is required.");
+      return;
+    }
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
     if (!validation.email.isValid) {
       setError("Please enter a valid email address.");
       return;
@@ -188,6 +197,7 @@ const RegisterPage = () => {
             type="text"
             placeholder="e.g., Jane Doe"
             value={fullName}
+            icon={User}
             onChange={(e) => setFullName(e.target.value)}
           />
           {/* Email Field */}
@@ -198,27 +208,24 @@ const RegisterPage = () => {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            icon={Mail}
             error={!validation.email.isValid ? validation.email.message : ""}
           />
           {/* Password Field */}
-          <div className="mb-2">
-            <label className="block text-base mb-1" htmlFor="password">
-              {t("auth.passwordLabel")}
-            </label>
-            <input
-              className="w-full px-3 py-2 border border-neutral rounded-md text-base"
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <FormField
+            id="password"
+            label={t("auth.passwordLabel")}
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            icon={KeyRound}
+          >
             <PasswordStrengthIndicator
               validation={validation.password}
               password={password}
             />
-          </div>
+          </FormField>
           {/* Confirm Password Field */}
           <FormField
             id="confirmPassword"
@@ -227,6 +234,7 @@ const RegisterPage = () => {
             placeholder="••••••••"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            icon={KeyRound}
             error={
               !validation.confirmPassword.isValid
                 ? validation.confirmPassword.message

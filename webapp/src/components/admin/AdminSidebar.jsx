@@ -1,16 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { Home, Calendar, Users, FileText, Settings } from "lucide-react";
+import { adminNavLinks } from "../../data/adminNavLinks";
+import { useTranslation } from "react-i18next";
 
 const AdminSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const navLinks = [
-    { name: "Dashboard", path: "/dashboard", icon: Home },
-    { name: "Schedule", path: "/schedule", icon: Calendar },
-    { name: "Clients", path: "/clients", icon: Users },
-    { name: "Invoices", path: "/invoices", icon: FileText },
-    { name: "Settings", path: "/settings", icon: Settings },
-  ];
-
-  // Replace your existing return statement with this one.
+  const { t } = useTranslation();
   return (
     <>
       {/* 1. Mobile Overlay: appears behind the sidebar, closes it on click */}
@@ -31,10 +24,10 @@ const AdminSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           Lawn Ledgers
         </div>
         <nav className="flex-1 p-2 space-y-1">
-          {navLinks.map((link) => (
+          {adminNavLinks.map(({ name, path, icon: Icon }) => (
             <NavLink
-              key={link.name}
-              to={link.path}
+              key={path}
+              to={path}
               // 3. Close sidebar on navigation
               onClick={() => setIsSidebarOpen(false)}
               className={({ isActive }) =>
@@ -45,8 +38,8 @@ const AdminSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 }`
               }
             >
-              <link.icon size={20} />
-              <span>{link.name}</span>
+              <Icon size={20} />
+              <span>{t(name)}</span>
             </NavLink>
           ))}
         </nav>

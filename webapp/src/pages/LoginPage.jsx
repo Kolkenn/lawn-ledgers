@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { handleGoogleSignIn, handleEmailLogin } from "../firebase/authService";
 import { useTranslation } from "react-i18next";
+import { Mail, KeyRound } from "lucide-react";
 
 import FormField from "../components/FormField";
 import { GoogleIcon } from "../components/icons/CustomIcons";
@@ -56,6 +57,16 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
+    // --- Validation ---
+    if (!email) {
+      setError("Email address is required.");
+      return;
+    }
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
 
     if (!isEmailValid) {
       setError("Please enter a valid email address.");
@@ -119,6 +130,7 @@ const LoginPage = () => {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            icon={Mail}
             error={!isEmailValid ? "Please enter a valid email format." : ""}
           />
           {/* Password */}
@@ -129,6 +141,7 @@ const LoginPage = () => {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            icon={KeyRound}
           />
           {/* Error */}
           {error && (

@@ -27,11 +27,14 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // If an owner needs to subscribe...
-    if (onboardingStatus === "needsSubscription") {
-      if (!location.pathname.startsWith("/create-company")) {
-        navigate(`/create-company/subscription`);
-      }
+    const needsSubscription = onboardingStatus === "needsSubscription";
+    const isOutsideCreationFlow =
+      !location.pathname.startsWith("/create-company");
+
+    // If an owner needs to subscribe and they are not already in the creation flow,
+    // redirect them to the subscription step.
+    if (needsSubscription && isOutsideCreationFlow) {
+      navigate(`/create-company/subscription`);
     }
   }, [onboardingStatus, navigate, location.pathname]);
 

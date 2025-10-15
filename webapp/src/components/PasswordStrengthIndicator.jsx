@@ -1,22 +1,28 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, X } from "lucide-react";
 
 const Requirement = ({ met, text }) => {
   // We use a transition on the color and height to make changes smooth
   const baseClasses =
     "flex items-center transition-colors duration-300 ease-in-out";
-  const metClasses = "text-success";
-  const unmetClasses = "text-error";
+  const metClasses = "text-base-content";
+  const unmetClasses = "text-base-content/50";
 
   return (
     <li className={`${baseClasses} ${met ? metClasses : unmetClasses}`}>
-      {met ? (
-        <Check className="w-5 h-5 mr-2 flex-shrink-0" />
-      ) : (
-        <X className="w-5 h-5 mr-2 flex-shrink-0" />
-      )}
-      <span>{text}</span>
+      <div className="inline-grid *:[grid-area:1/1] mr-2 ml-2 space-y-2">
+        <div
+          className={`status status-lg animate-ping ${
+            met ? "status-success" : "status-error"
+          }`}
+        ></div>
+        <div
+          className={`status status-lg ${
+            met ? "status-success" : "status-error"
+          }`}
+        ></div>
+      </div>
+      <span className="flex-grow">{text}</span>
     </li>
   );
 };

@@ -9,9 +9,10 @@ const TodaysJobsPage = () => {
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
 
-  const todaysJobs = mockJobs.filter(
-    (job) => job.crewId === CURRENT_CREW_ID && job.date === today
-  );
+  const todaysJobs = mockJobs;
+  // const todaysJobs = mockJobs.filter(
+  //   (job) => job.crewId === CURRENT_CREW_ID && job.date === today
+  // );
 
   return (
     <div className="space-y-4">

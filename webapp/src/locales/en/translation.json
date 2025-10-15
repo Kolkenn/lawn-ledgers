@@ -39,6 +39,15 @@
     "dashboard": "Dashboard",
     "settings": "Settings"
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "schedule": "Schedule",
+    "clients": "Clients",
+    "invoices": "Invoices",
+    "settings": "Settings",
+    "jobs": "Jobs",
+    "timeclock": "Timeclock"
+  },
   "expandSidebar": "Expand sidebar",
   "collapseSidebar": "Collapse sidebar",
   "dashboard": {

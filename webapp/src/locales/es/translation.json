@@ -39,6 +39,15 @@
     "dashboard": "Panel",
     "settings": "Configuración"
   },
+  "nav": {
+    "dashboard": "Inicio",
+    "schedule": "Agenda",
+    "clients": "Clientes",
+    "invoices": "Facturas",
+    "settings": "Ajustes",
+    "jobs": "Trabajos",
+    "timeclock": "Fichar"
+  },
   "expandSidebar": "Expandir barra lateral",
   "collapseSidebar": "Contraer barra lateral",
   "dashboard": {

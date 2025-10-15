@@ -4,7 +4,8 @@ import { db, storage } from "../../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../../context/AuthContext";
-import { Save, UploadCloud, Undo2 } from "lucide-react";
+import { Save, UploadCloud, Undo2, Building2, MapPinHouse } from "lucide-react";
+import FormField from "../FormField";
 
 const CompanyInfoSettings = () => {
   const { activeRole, activeCompany } = useAuth();
@@ -195,210 +196,156 @@ const CompanyInfoSettings = () => {
     }
   };
 
-  const inputClasses =
-    "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed";
-
   return (
-    // Main Container
-    <div className="bg-white p-6 rounded-lg shadow-xl">
-      {/* Title Section */}
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        {t("settings.companyInfo.title")}
-      </h2>
-      {/* Company Logo Container */}
-      <div>
-        {/* Logo Label */}
-        <label className="block text-sm font-medium text-gray-700">
-          {t("settings.companyInfo.logoLabel")}
-        </label>
-        {/* Logo Container */}
-        <div className="mt-1 flex items-center space-x-6">
-          {/* Logo Image Display Box */}
-          <div className="h-16 w-32 bg-gray-100 rounded-md flex items-center justify-center border">
-            {logoPreview ? (
-              <img
-                src={logoPreview}
-                alt="Company Logo Preview"
-                className="h-full w-full object-contain"
-              />
-            ) : (
-              <span className="text-xs text-gray-500">Logo</span>
-            )}
-          </div>
-          {/* Logo Upload Button */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="logoUpload"
-              className={`cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 ${
-                !isOwner ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              <UploadCloud className="inline-block w-5 h-5 mr-2" />
-              {isUploading
-                ? t("settings.companyInfo.uploadingLogo")
-                : t("settings.companyInfo.changeLogo")}
-            </label>
-            <input
-              id="logoUpload"
-              name="logoUpload"
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={handleLogoUpload}
-              className="sr-only"
-              disabled={!isOwner || isUploading}
-            />
-            {uploadMessage.text && (
-              <p
-                className={`text-xs mt-2 ${
-                  uploadMessage.type === "error"
-                    ? "text-red-600"
-                    : uploadMessage.type === "success"
-                    ? "text-green-600"
-                    : "text-gray-500"
-                }`}
-              >
-                {uploadMessage.text}
-              </p>
-            )}
-          </div>
-        </div>
-        {/* Helper Text */}
-        <p className="text-xs text-gray-500 mb-2 border-b pb-2 mt-2">
-          {t("settings.companyInfo.logoHelper")}
-        </p>
-      </div>
-      {/* Company Info Container */}
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
-            {/* Company Name Section */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("settings.companyInfo.nameLabel")}
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={formState.name}
-                onChange={handleInputChange}
-                className={inputClasses}
-                disabled // Company name is never editable here
-              />
-            </div>
-            {/* Company Street Section */}
-            <div>
-              <label
-                htmlFor="address.street"
-                className="block text-sm font-medium "
-              >
-                {t("settings.companyInfo.addressLabel")}
-              </label>
-              <input
-                type="text"
-                id="address.street"
-                value={formState.address.street}
-                onChange={handleInputChange}
-                className={inputClasses}
-                disabled={!isOwner}
-              />
-            </div>
-            {/* Company City Section */}
-            <div>
-              <label
-                htmlFor="address.city"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("settings.companyInfo.cityLabel")}
-              </label>
-              <input
-                type="text"
-                id="address.city"
-                value={formState.address.city}
-                onChange={handleInputChange}
-                className={inputClasses}
-                disabled={!isOwner}
-              />
-            </div>
-            {/* Company State Section */}
-            <div>
-              <label
-                htmlFor="state"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("settings.companyInfo.stateLabel")}
-              </label>
-              <input
-                type="text"
-                id="address.state"
-                value={formState.address.state}
-                onChange={handleInputChange}
-                className={inputClasses}
-                disabled={!isOwner}
-              />
-            </div>
-            {/* Company ZIP Section */}
-            <div>
-              <label
-                htmlFor="address.zip"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("settings.companyInfo.zipLabel")}
-              </label>
-              <input
-                type="text"
-                id="address.zip"
-                value={formState.address.zip}
-                onChange={handleInputChange}
-                className={inputClasses}
-                disabled={!isOwner}
-              />
-            </div>
-          </div>
-          {/* Action Buttons Container */}
-          <div className="flex items-center justify-end space-x-4">
-            {/* Feedback Message */}
-            {statusMessage.text && (
-              <p
-                className={`text-sm ${
-                  statusMessage.type === "error"
-                    ? "text-red-500"
-                    : "text-green-600"
-                }`}
-              >
-                {statusMessage.text}
-              </p>
-            )}
-            {/* Button Control */}
-            {isOwner && isDirty && (
-              <div className="flex space-x-2">
-                <button
-                  type="button" // Important: type="button" prevents form submission
-                  onClick={handleUndoChanges}
-                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50"
-                  aria-label="Undo changes"
-                  title="Undo changes"
-                >
-                  <Undo2 className="w-5 h-5 mr-2" />
-                  Undo
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >
-                  <Save className="w-5 h-5 mr-2" />
-                  {isSaving
-                    ? t("settings.companyInfo.savingChanges")
-                    : t("settings.companyInfo.saveChanges")}
-                </button>
+    <div className="card bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h2 className="text-xl card-title">
+          {t("settings.companyInfo.title")}
+        </h2>
+
+        {/* Logo Section */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">
+              {t("settings.companyInfo.logoLabel")}
+            </span>
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="avatar">
+              <div className="w-32 rounded bg-base-200 flex items-center justify-center">
+                {logoPreview ? (
+                  <img src={logoPreview} alt="Company Logo Preview" />
+                ) : (
+                  <span className="text-xs text-base-content/60">No Logo</span>
+                )}
               </div>
-            )}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="logoUpload"
+                className={`btn btn-sm ${!isOwner ? "btn-disabled" : ""}`}
+              >
+                <UploadCloud size={16} />
+                {isUploading
+                  ? t("settings.companyInfo.uploadingLogo")
+                  : t("settings.companyInfo.changeLogo")}
+              </label>
+              <input
+                id="logoUpload"
+                name="logoUpload"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleLogoUpload}
+                className="sr-only"
+                disabled={!isOwner || isUploading}
+              />
+              {uploadMessage.text && (
+                <p
+                  className={`text-xs mt-2 ${
+                    uploadMessage.type === "error"
+                      ? "text-error"
+                      : "text-success"
+                  }`}
+                >
+                  {uploadMessage.text}
+                </p>
+              )}
+            </div>
           </div>
+          <p className="label-text-alt">
+            {t("settings.companyInfo.logoHelper")}
+          </p>
         </div>
-      </form>
+
+        <div className="divider"></div>
+
+        {/* Company Info Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              id="name"
+              label={t("settings.companyInfo.nameLabel")}
+              type="text"
+              value={formState.name}
+              onChange={handleInputChange}
+              disabled // Company name is not editable here
+              icon={Building2}
+            />
+            <FormField
+              id="address.street"
+              label={t("settings.companyInfo.addressLabel")}
+              type="text"
+              value={formState.address.street}
+              onChange={handleInputChange}
+              disabled={!isOwner}
+              icon={MapPinHouse}
+            />
+            <FormField
+              id="address.city"
+              label={t("settings.companyInfo.cityLabel")}
+              type="text"
+              value={formState.address.city}
+              onChange={handleInputChange}
+              disabled={!isOwner}
+              icon={MapPinHouse}
+            />
+            <FormField
+              id="address.state"
+              label={t("settings.companyInfo.stateLabel")}
+              type="text"
+              value={formState.address.state}
+              onChange={handleInputChange}
+              disabled={!isOwner}
+              icon={MapPinHouse}
+            />
+            <FormField
+              id="address.zip"
+              label={t("settings.companyInfo.zipLabel")}
+              type="text"
+              value={formState.address.zip}
+              onChange={handleInputChange}
+              disabled={!isOwner}
+              icon={MapPinHouse}
+            />
+          </div>
+
+          {isOwner && isDirty && (
+            <div className="card-actions justify-end items-center gap-4">
+              {statusMessage.text && (
+                <p
+                  className={`text-sm ${
+                    statusMessage.type === "error"
+                      ? "text-error"
+                      : "text-success"
+                  }`}
+                >
+                  {statusMessage.text}
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={handleUndoChanges}
+                className="btn btn-ghost"
+                aria-label="Undo changes"
+                title="Undo changes"
+              >
+                <Undo2 size={16} />
+                Undo
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="btn btn-success"
+              >
+                <Save size={16} />
+                {isSaving
+                  ? t("settings.companyInfo.savingChanges")
+                  : t("settings.companyInfo.saveChanges")}
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 };
