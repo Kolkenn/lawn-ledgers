@@ -21,7 +21,7 @@ This is a monorepo containing three independently deployable components:
 ```
 lawn-ledgers/
 ├── backend/          # Python / FastAPI REST API
-├── webapp/           # React / TypeScript frontend (the app)
+├── webapp/           # React / JSX frontend (the app)
 └── marketing-site/   # Static HTML marketing landing page
 ```
 
@@ -32,7 +32,7 @@ lawn-ledgers/
 ### Backend
 | Technology | Purpose |
 |---|---|
-| Python + FastAPI | REST API and webhook handling |
+| Python 3.13+ + FastAPI | REST API and webhook handling |
 | Firebase Admin SDK + Firestore | Database and server-side auth |
 | Stripe Subscriptions API | Billing and plan management |
 | Stripe Connect API | Contractor payment processing |
@@ -41,12 +41,13 @@ lawn-ledgers/
 ### Frontend (webapp)
 | Technology | Purpose |
 |---|---|
-| React 18 + TypeScript | UI framework |
+| React 18 + JSX | UI framework |
 | Vite | Build tooling |
 | React Router v6 | Client-side routing and route protection |
+| TanStack Query | Async data fetching, caching, and state management |
 | DaisyUI + Tailwind CSS | Component library and styling |
-| react-i18next | Internationalization (EN/ES) |
-| Firebase Auth | Authentication (email + SSO) |
+| react-i18next | Internationalization (EN / ES / FR) |
+| Firebase Auth | Authentication (email/password + Google SSO) |
 
 ### Marketing Site
 | Technology | Purpose |
@@ -60,10 +61,18 @@ lawn-ledgers/
 ## ✅ Features Implemented
 
 ### Authentication & Onboarding
-- Email/password and SSO (Google) authentication via Firebase
+- Email/password and Google SSO authentication via Firebase
 - Multi-step company creation flow (name → address → subscription → payment setup)
 - Route guards that enforce onboarding completion before app access
-- Subscription gating — users without an active plan are blocked with a clear prompt
+- Subscription gating — owners are prompted to subscribe, crew members see a contact-admin notice
+- Auto-logout on idle via a custom `useIdleTimer` hook
+- Animated password strength indicator with real-time validation feedback
+
+### Session & Data Architecture
+- TanStack Query manages all async data fetching with intelligent caching (5 min stale time for company and role data)
+- Auth context handles multi-company membership — users belonging to multiple companies can switch between them
+- Staged loading UX in protected routes: "Authenticating..." → "Confirming Membership..." → "Loading Active Company..." provides clear feedback at each step
+- Onboarding status machine with four states: `checking`, `needsSubscription`, `subscriptionRequired_contactAdmin`, `complete`
 
 ### Billing (Stripe Subscriptions)
 - Stripe Checkout integration for new subscriptions with optional 14-day trial
@@ -82,7 +91,7 @@ lawn-ledgers/
 - Company profile management (name, address, logo upload)
 - Team management with role-based access (Owner / Crew)
 - Full light/dark theme support (emerald / forest)
-- Complete English and Spanish translations via i18n
+- Complete translations via i18n: **English**, **Spanish**, and **French**
 
 ### Marketing Site
 - Responsive landing page with features, pricing, and add-on sections
@@ -94,15 +103,25 @@ lawn-ledgers/
 
 ## 🚧 Planned / In Progress
 
+The i18n architecture already includes navigation keys for these upcoming features, meaning the translation groundwork is laid:
+
 - [ ] Client CRM — contact management, property details, service history
 - [ ] Job scheduling — calendar view, job assignment to crew members
 - [ ] Invoice generation — PDF invoices with online payment links
+- [ ] Time clock — crew check-in/check-out tracking
 - [ ] Route optimization — efficient scheduling for multi-stop service days
 - [ ] Mobile app (React Native) — field-facing crew interface
 
 ---
 
 ## 🚀 Running Locally
+
+### Prerequisites
+- Python 3.13+
+- Node.js 18+
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
+- A Firebase project with Firestore and Authentication enabled
+- A Stripe account with test keys
 
 ### Backend
 
@@ -194,7 +213,7 @@ Both are designed for cloud deployment. Environment-specific configuration is ha
 
 ## 📌 Status
 
-Active side project — core billing, authentication, and payment infrastructure are complete. CRM, scheduling, and invoicing features are in active development.
+Active side project — core billing, authentication, payment infrastructure, and internationalization are complete. CRM, scheduling, and invoicing features are in active development.
 
 ---
 
