@@ -96,28 +96,17 @@ lawn-ledgers/
 ## 🚀 Running Locally
 
 ### Backend
-
-```bash
 cd backend
 
 # Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+uv venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
 # Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
-cp .env.example .env
-# Fill in your Stripe and Firebase credentials in .env
-
-# Add your Firebase service account key
-# Download from Firebase Console → Project Settings → Service Accounts
-# Save as: backend/serviceAccountKey.json
+uv sync
 
 # Start the development server
 uvicorn main:app --reload
-```
 
 ### Frontend (webapp)
 
