@@ -177,7 +177,7 @@ Active side project — core billing, authentication, and payment infrastructure
 
 ## 🧑‍💻 Author
 
-**Leonel Ponce** — [LinkedIn](https://www.linkedin.com/in/leonelponce-862391214) · [GitHub](https://github.com/Kolkenn)
+**Leonel Ponce** — [LinkedIn](https://www.linkedin.com/in/ponceleonel) · [GitHub](https://github.com/Kolkenn)
 
 > Built from scratch because real problems deserve real solutions.
 
