@@ -4,10 +4,13 @@
 
 Built as a solo full-stack project to solve a real problem: most landscaping companies are run by skilled tradespeople who shouldn't have to juggle spreadsheets, paper invoices, and disconnected tools just to run their business.
 
+![LawnLedgers Marketing Site](screenshots/marketing-site.png)
+
+---
+
 ## 🌐 Live Demo
 
-[Marketing Site](https://kolkenn.github.io/lawn-ledgers/) — 
-static landing page deployed via GitHub Pages
+[Marketing Site](https://kolkenn.github.io/lawn-ledgers/) — static landing page deployed via GitHub Pages
 
 ---
 
@@ -33,7 +36,7 @@ lawn-ledgers/
 | Firebase Admin SDK + Firestore | Database and server-side auth |
 | Stripe Subscriptions API | Billing and plan management |
 | Stripe Connect API | Contractor payment processing |
-| python-dotenv | Environment configuration |
+| uv | Dependency and environment management |
 
 ### Frontend (webapp)
 | Technology | Purpose |
@@ -85,6 +88,7 @@ lawn-ledgers/
 - Responsive landing page with features, pricing, and add-on sections
 - Auto-hiding header on mobile scroll
 - Light/dark theme toggle with localStorage persistence
+- Deployed automatically via GitHub Actions to GitHub Pages
 
 ---
 
@@ -101,6 +105,8 @@ lawn-ledgers/
 ## 🚀 Running Locally
 
 ### Backend
+
+```bash
 cd backend
 
 # Create and activate virtual environment
@@ -110,8 +116,17 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 # Install dependencies
 uv sync
 
+# Set up environment variables
+cp .env.example .env
+# Fill in your Stripe and Firebase credentials in .env
+
+# Add your Firebase service account key
+# Download from Firebase Console → Project Settings → Service Accounts
+# Save as: backend/serviceAccountKey.json
+
 # Start the development server
 uvicorn main:app --reload
+```
 
 ### Frontend (webapp)
 
@@ -142,24 +157,38 @@ cd marketing-site
 
 ### Backend `.env`
 ```
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_SECRET_KEY=sk_test_your_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_secret_here
 CLIENT_BASE_URL=http://localhost:5173
 CORS_ORIGINS=http://localhost:5173
 ```
 
 ### Frontend `.env`
 ```
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 VITE_BACKEND_URL=http://localhost:8000
 ```
 
 > **Note:** A `serviceAccountKey.json` Firebase service account file is required for the backend. Download it from your Firebase project console. This file is gitignored and should never be committed.
+
+---
+
+## 🚢 Deployment
+
+### Marketing Site (GitHub Pages)
+
+The marketing site deploys automatically to GitHub Pages on every push to `main` that includes changes in `marketing-site/`. No manual steps required.
+
+Live at: [https://kolkenn.github.io/lawn-ledgers/](https://kolkenn.github.io/lawn-ledgers/)
+
+### Backend & Webapp
+
+Both are designed for cloud deployment. Environment-specific configuration is handled entirely through `.env` files — no code changes required between environments.
 
 ---
 
@@ -171,8 +200,10 @@ Active side project — core billing, authentication, and payment infrastructure
 
 ## 🧑‍💻 Author
 
-**Leonel Ponce** — [LinkedIn](https://www.linkedin.com/in/ponceleonel) · [GitHub](https://github.com/Kolkenn)
+**Leonel Ponce** — [LinkedIn](https://www.linkedin.com/in/leonelponce-862391214) · [GitHub](https://github.com/Kolkenn)
 
 > Built from scratch because real problems deserve real solutions.
+
+---
 
 © 2025 Leonel Ponce. All rights reserved. This repository is publicly visible for portfolio purposes only.
