@@ -4,6 +4,11 @@
 
 Built as a solo full-stack project to solve a real problem: most landscaping companies are run by skilled tradespeople who shouldn't have to juggle spreadsheets, paper invoices, and disconnected tools just to run their business.
 
+## 🌐 Live Demo
+
+[Marketing Site](https://kolkenn.github.io/lawn-ledgers/) — 
+static landing page deployed via GitHub Pages
+
 ---
 
 ## 📐 Architecture
